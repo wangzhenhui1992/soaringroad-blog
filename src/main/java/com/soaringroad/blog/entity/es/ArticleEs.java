@@ -1,7 +1,9 @@
 package com.soaringroad.blog.entity.es;
 
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.ElementCollection;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.Id;
@@ -48,7 +50,8 @@ public class ArticleEs implements SrBlogEsEntity{
 	/**
 	 * 标签
 	 */
-	private String[] labels;
+	@ElementCollection(targetClass=String.class)
+	private List<String> labels;
 
 	/**
 	 * 文章标题

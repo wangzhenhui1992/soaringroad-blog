@@ -6,6 +6,6 @@ import com.soaringroad.blog.entity.h2.ArticleH2;
 import com.soaringroad.blog.repository.SrBlogH2Repository;
 
 @Component
-public interface ArticleH2Repository extends SrBlogH2Repository<ArticleH2, Integer> {
+public interface ArticleH2Repository extends SrBlogH2Repository<ArticleH2, Long> {
 
 }

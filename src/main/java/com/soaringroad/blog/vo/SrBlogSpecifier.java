@@ -1,6 +1,7 @@
 package com.soaringroad.blog.vo;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -41,6 +42,10 @@ public class SrBlogSpecifier<T> implements Specification<T> {
 			case LEQ:
 				Path<Long> pathLe = root.get(queryCondition.getName());
 				predicateList.add(criteriaBuilder.ge(pathLe, Long.valueOf(value.toString())));
+				break;
+			case MEMBER:
+				Path<Collection<String>> pathIn = root.<Collection<String>>get(queryCondition.getName());
+				predicateList.add(criteriaBuilder.isMember(String.valueOf(value), pathIn));
 				break;
 			default:
 				break;

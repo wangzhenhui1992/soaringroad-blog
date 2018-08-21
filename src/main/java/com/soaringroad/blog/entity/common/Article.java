@@ -2,7 +2,9 @@ package com.soaringroad.blog.entity.common;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.ElementCollection;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -38,7 +40,7 @@ public class Article extends AbstractSrBlogEntity {
 	/**
 	 * 标签
 	 */
-	private String[] labels;
+	private List<String> labels;
 
 	/**
 	 * 文章标题

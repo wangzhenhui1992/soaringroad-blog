@@ -6,7 +6,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.util.Assert;
 
 import com.soaringroad.blog.entity.SrBlogH2Entity;
 import com.soaringroad.blog.vo.SrBlogH2Query;
@@ -21,7 +20,6 @@ public class SrBlogH2QueryBuilder<T extends SrBlogH2Entity> implements SrBlogQue
 	private SrBlogQueryEntity queryEntity;
 
 	public SrBlogH2QueryBuilder(@NotNull SrBlogQueryEntity queryEntity) {
-		Assert.notEmpty(queryEntity.getQueryConditions(), "检索条件未设定. queryEntity = " + queryEntity);
 		this.queryEntity = queryEntity;
 	}
 

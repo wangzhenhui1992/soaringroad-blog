@@ -9,13 +9,13 @@ import com.soaringroad.blog.vo.SrBlogQueryEntity;;
 
 @RestController
 @RequestMapping("/api/article")
-public class ArticleApiService extends AbstractSrBlogApiService<Article, Integer> {
+public class ArticleApiService extends AbstractSrBlogApiService<Article, Long> {
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected boolean checkGet(Integer id) {
+	protected boolean checkGet(Long id) {
 		return true;
 	}
 

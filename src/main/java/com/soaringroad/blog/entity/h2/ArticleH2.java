@@ -1,7 +1,9 @@
 package com.soaringroad.blog.entity.h2;
 
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -50,7 +52,8 @@ public class ArticleH2 implements SrBlogH2Entity{
 	/**
 	 * 标签
 	 */
-	private String[] labels;
+	@ElementCollection(targetClass=String.class)
+	private List<String> labels;
 
 	/**
 	 * 文章标题

@@ -6,6 +6,6 @@ import com.soaringroad.blog.entity.es.ArticleEs;
 import com.soaringroad.blog.repository.SrBlogEsRepository;
 
 @Component
-public interface ArticleESRepository extends SrBlogEsRepository<ArticleEs, Integer> {
+public interface ArticleESRepository extends SrBlogEsRepository<ArticleEs, Long> {
 
 }

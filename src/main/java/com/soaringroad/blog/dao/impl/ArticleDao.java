@@ -13,16 +13,16 @@ import com.soaringroad.blog.repository.es.ArticleESRepository;
 import com.soaringroad.blog.repository.h2.ArticleH2Repository;
 
 @Component
-public class ArticleDao extends AbstractSrBlogDao<Article,ArticleEs,ArticleH2,Integer>{
+public class ArticleDao extends AbstractSrBlogDao<Article,ArticleEs,ArticleH2,Long>{
 	
 
 	@Override
-	protected SrBlogEsRepository<ArticleEs, Integer> getEsRepository() {
+	protected SrBlogEsRepository<ArticleEs, Long> getEsRepository() {
 		return SrBlogContextContainer.getBean(ArticleESRepository.class);
 	}
 
 	@Override
-	protected SrBlogH2Repository<ArticleH2, Integer> getH2Repository() {
+	protected SrBlogH2Repository<ArticleH2, Long> getH2Repository() {
 		return SrBlogContextContainer.getBean(ArticleH2Repository.class);
 	}
 	

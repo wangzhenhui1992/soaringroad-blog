@@ -15,6 +15,7 @@ import com.soaringroad.blog.vo.SrBlogQueryOptionEnum;
 import com.soaringroad.blog.vo.SrBlogQuerySort;
 import com.soaringroad.blog.vo.SrBlogQuerySortOrderEnum;
 
+// TODO Query Number and Page
 public class SrBlogEsQueryBuilder implements SrBlogQueryBuilder {
 
 	private SrBlogQueryEntity queryEntity;
