@@ -34,11 +34,6 @@ public class SrBlogFilter implements Filter {
 	@Autowired
 	private SrAuthService authService;
 
-	private static List<String> matchList = Arrays.asList("/favicon.ico", "/index.html", "/inline.bundle.js",
-			"/inline.bundle.js.map", "/main.bundle.js", "/main.bundle.js.map", "/polyfills.bundle.js",
-			"/polyfills.bundle.js.map", "/styles.bundle.js", "/styles.bundle.js.map", "/vendor.bundle.js",
-			"/vendor.bundle.js.map");
-
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 		return;
@@ -49,21 +44,32 @@ public class SrBlogFilter implements Filter {
 			throws IOException, ServletException {
 
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
+		HttpServletResponse httpResponse = (HttpServletResponse)response;
 		String uri = httpRequest.getRequestURI();
 		log.info(String.format("收到请求 : %s ", uri));
 
+		// OPTIONS
+		if ("OPTIONS".equals(httpRequest.getMethod())) {
+			httpResponse.setStatus(HttpServletResponse.SC_OK);
+			chain.doFilter(request, response);
+			return;
+		}
+		
 		// 允许跨域
-		allowCros(response);
+		allowCros(httpResponse);
 
 		// 管理功能API认证
 		if (!auth(httpRequest)) {
-			request.getRequestDispatcher("/login");
+			
+			httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+			
+//			request.getRequestDispatcher("/login").forward(request, httpResponse);
 			return;
 		}
 
 		// 处理请求，API对象和静态资源以外的请求转发到Angular前端
 		if (isNotMatchPatten(uri)) {
-			request.getRequestDispatcher("/index.html").forward(request, response);
+			httpResponse.sendError(HttpServletResponse.SC_NOT_FOUND);
 			return;
 		}
 
@@ -76,14 +82,13 @@ public class SrBlogFilter implements Filter {
 	}
 
 	private static boolean isNotMatchPatten(String uri) {
-		return !matchList.contains(uri) && !uri.startsWith("/api/");
+		return !uri.startsWith("/api/");
 	}
 
-	private void allowCros(ServletResponse response) {
+	private void allowCros(HttpServletResponse httpResponse) {
 		if (!allowCros) {
 			return;
 		}
-		HttpServletResponse httpResponse = (HttpServletResponse) response;
 		httpResponse.setHeader("Access-Control-Allow-Origin", "*");
 		httpResponse.setHeader("Access-Control-Allow-Headers", "*");
 		httpResponse.setHeader("Access-Control-Allow-Methods", "*");

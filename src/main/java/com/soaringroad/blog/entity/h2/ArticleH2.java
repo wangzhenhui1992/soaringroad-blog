@@ -3,6 +3,7 @@ package com.soaringroad.blog.entity.h2;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -73,6 +74,7 @@ public class ArticleH2 implements SrBlogH2Entity{
 	/**
 	 * 文章内容
 	 */
+	@Column(length=10000)
 	private String content;
 
 	/**

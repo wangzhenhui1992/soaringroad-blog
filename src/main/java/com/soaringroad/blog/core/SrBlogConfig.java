@@ -40,6 +40,7 @@ public class SrBlogConfig {
 		if (allowCors) {
 			corsConfiguration.addAllowedOrigin(CorsConfiguration.ALL); 
 			corsConfiguration.addAllowedHeader(CorsConfiguration.ALL);
+			corsConfiguration.addAllowedHeader(HttpHeaderNames.AUTHORIZATION.toString());
 			corsConfiguration.addAllowedMethod(CorsConfiguration.ALL);
 			corsConfiguration.addExposedHeader(HttpHeaderNames.AUTHORIZATION.toString());
 		}

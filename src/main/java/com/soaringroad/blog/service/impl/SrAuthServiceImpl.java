@@ -1,5 +1,7 @@
 package com.soaringroad.blog.service.impl;
 
+import javax.validation.constraints.NotNull;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -20,15 +22,16 @@ public class SrAuthServiceImpl implements SrAuthService {
 	private String secretKey;
 	@Value("${app.logintimeout:86400000}")
 	private long loginTimeout;
-
-	private static final String USERNAME = "tester-username";
-	private static final String PASSWORD = "tester-password";
+	@Value("${app.admin.username:tester-username}")
+	private String userName;
+	@Value("${app.admin.password:tester-password}")
+	private String passowrd;
 
 	@Override
-	public String login(String username, String password) {
+	public String login(@NotNull String username,@NotNull  String password) {
 		log.debug(String.format("登陆验证: %s %s", username, password));
 		// TODO 从ES或者数据库获取用户名密码并验证
-		if (!USERNAME.equals(username) || !PASSWORD.equals(password)) {
+		if (!userName.equals(username) || !passowrd.equals(password)) {
 			return null;
 		}
 		Algorithm hmac256 = Algorithm.HMAC256(secretKey);
@@ -39,7 +42,7 @@ public class SrAuthServiceImpl implements SrAuthService {
 	}
 
 	@Override
-	public boolean auth(String jwtToken) {
+	public boolean auth(@NotNull String jwtToken) {
 		Algorithm hmac256 = Algorithm.HMAC256(secretKey);
 		JWTVerifier verifier = JWT.require(hmac256).withIssuer("login").build();
 		DecodedJWT jwt = null;
@@ -59,7 +62,7 @@ public class SrAuthServiceImpl implements SrAuthService {
 	}
 
 	private boolean isUserExist(String username) {
-		return USERNAME.equals(username);
+		return userName.equals(username);
 	}
 
 	private boolean isTokenTimeout(Long date) {
