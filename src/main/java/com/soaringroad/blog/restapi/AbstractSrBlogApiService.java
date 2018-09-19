@@ -25,6 +25,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.soaringroad.blog.dao.SrBlogDao;
 import com.soaringroad.blog.entity.AbstractSrBlogEntity;
 import com.soaringroad.blog.entity.SrBlogEntity;
+import com.soaringroad.blog.entity.SrBlogEsEntity;
+import com.soaringroad.blog.entity.SrBlogH2Entity;
 import com.soaringroad.blog.vo.SrBlogEntityTypeEnum;
 import com.soaringroad.blog.vo.SrBlogQueryEntity;
 
@@ -152,7 +154,7 @@ public abstract class AbstractSrBlogApiService<T extends AbstractSrBlogEntity, E
 		getDao(entity).delete(entity);
 	}
 
-	private SrBlogDao<T, ? extends T, ? extends T, E> getDao(T srBlogEntity) {
+	private SrBlogDao<T,SrBlogEsEntity, SrBlogH2Entity, E> getDao(T srBlogEntity) {
 		return srBlogEntity.getDao();
 	}
 
