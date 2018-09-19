@@ -1,0 +1,18 @@
+version: 0.0
+os: linux
+files:
+  - source: srcloud-blog-0.0.1-SNAPSHOT.jar
+    destination: /docker/srblog-springboot
+hooks:
+  BeforeInstall:
+    - location: /scripts/backup.sh
+      timeout: 300
+      runas: root
+  AfterInstall:
+    - location: /scripts/build.sh
+      timeout: 300
+      runas: root
+  ApplicationStart:
+    - location: /scripts/run.sh
+      timeout: 300
+      runas: root

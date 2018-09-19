@@ -1,0 +1,1 @@
+mv /docker/srblog-springboot/srcloud-blog-0.0.1-SNAPSHOT.jar  /docker/srblog-springboot/"srcloud-blog-0.0.1-SNAPSHOT.jar-$DEPLOYMENT_ID"
