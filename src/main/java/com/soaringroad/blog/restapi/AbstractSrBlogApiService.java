@@ -154,11 +154,11 @@ public abstract class AbstractSrBlogApiService<T extends AbstractSrBlogEntity, E
 		getDao(entity).delete(entity);
 	}
 
-	private SrBlogDao<T,SrBlogEsEntity, SrBlogH2Entity, E> getDao(T srBlogEntity) {
+	private SrBlogDao<T,? extends SrBlogEsEntity, ? extends SrBlogH2Entity, E> getDao(T srBlogEntity) {
 		return srBlogEntity.getDao();
 	}
 
-	private SrBlogDao<T, ? extends T, ? extends T, E> getDao() {
+	private SrBlogDao<T, ? extends SrBlogEsEntity, ? extends SrBlogH2Entity, E> getDao() {
 		T newInstance = getInstance();
 		if (newInstance == null) {
 			return null;
