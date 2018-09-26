@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import com.soaringroad.blog.service.SrAuthService;
@@ -46,9 +45,6 @@ public class SrBlogFilter implements Filter {
 		HttpServletResponse httpResponse = (HttpServletResponse)response;
 		String uri = httpRequest.getRequestURI();
 		log.info(String.format("收到请求 : %s ", uri));
-		RedisTemplate<String,Object> redisTemplate = SrBlogContextContainer.getBean(RedisTemplate.class);
-		redisTemplate.opsForHash().put("testhash", "hash", "value");
-		log.info(redisTemplate.opsForHash().get("testhash", "hash").toString());
 		// OPTIONS
 		if ("OPTIONS".equals(httpRequest.getMethod())) {
 			httpResponse.setStatus(HttpServletResponse.SC_OK);

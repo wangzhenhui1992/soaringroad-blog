@@ -12,6 +12,7 @@ import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -70,16 +71,19 @@ public class SrBlogConfig {
 	}
 	
 	@Bean()
-	public RedisTemplate<String, Object> redisTemplate(JedisConnectionFactory jedisFactory) {
+	public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisFactory) {
 
 		// RedisJsonSerializer
 		Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(
 				Object.class);
-
+		StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
+		
 		// RedisTemplate
 		RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-		redisTemplate.setConnectionFactory(jedisFactory);
-		redisTemplate.setEnableDefaultSerializer(true);
+		redisTemplate.setConnectionFactory(redisFactory);
+		redisTemplate.setEnableDefaultSerializer(false);
+		redisTemplate.setHashKeySerializer(stringRedisSerializer);
+		redisTemplate.setKeySerializer(stringRedisSerializer);
 		redisTemplate.setHashValueSerializer(jackson2JsonRedisSerializer);
 		redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
 		return redisTemplate;
