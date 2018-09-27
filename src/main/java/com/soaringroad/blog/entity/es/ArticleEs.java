@@ -1,5 +1,7 @@
 package com.soaringroad.blog.entity.es;
 
+import static com.soaringroad.blog.util.SrBlogConsts.ENTITY_KEY_ARTICLE;
+
 import java.util.Date;
 import java.util.List;
 
@@ -85,5 +87,10 @@ public class ArticleEs implements SrBlogEsEntity{
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	@JsonFormat(pattern="yyyy-MM-dd")
 	private Date date;
+
+	@Override
+	public String redisKey() {
+		return String.format(ENTITY_KEY_ARTICLE, id);
+	}
 
 }

@@ -16,7 +16,7 @@ public interface RedisRepository {
 	void increaseValue(String key, double delta);
 
 	void increaseValue(String key, long delta);
-
+	
 	Object getHashValue(String key, String hashKey);
 
 	void setHashValue(String key, String hashKey, Object value);
@@ -28,5 +28,7 @@ public interface RedisRepository {
 	void increaseHashValue(String key, String hashKey, long delta);
 
 	void increaseHashValue(String key, String hashKey, double delta);
+	
+	void delete(String key);
 
 }

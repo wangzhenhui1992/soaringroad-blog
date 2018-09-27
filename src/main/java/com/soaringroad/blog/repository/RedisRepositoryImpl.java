@@ -97,6 +97,12 @@ public class RedisRepositoryImpl implements RedisRepository {
 		checkNull(hashKey);
 		redisTemplate.opsForHash().increment(key, hashKey, delta);
 	}
+	
+	@Override
+	public void delete(String key) {
+		checkNull(key);
+		redisTemplate.delete(key);
+	}
 
 	private static void checkNull(String key) {
 		Assert.notNull(key, "key must not be null");
