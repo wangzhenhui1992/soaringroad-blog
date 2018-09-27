@@ -5,7 +5,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.soaringroad.blog.entity.common.Article;
 import com.soaringroad.blog.restapi.AbstractSrBlogApiService;
-import com.soaringroad.blog.vo.SrBlogQueryEntity;;
+import com.soaringroad.blog.vo.SrBlogQueryEntity;
+import static com.soaringroad.blog.util.SrBlogConsts.ENTITY_KEY_ARTICLE;
 
 @RestController
 @RequestMapping("/api/admin/article")
@@ -50,6 +51,11 @@ public class AdminArticleApiService extends AbstractSrBlogApiService<Article,Int
 	@Override
 	protected boolean checkSearch(SrBlogQueryEntity q) {
 		return true;
+	}
+
+	@Override
+	protected String entityKey() {
+		return ENTITY_KEY_ARTICLE;
 	}
 
 	

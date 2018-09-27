@@ -27,6 +27,8 @@ import com.soaringroad.blog.entity.AbstractSrBlogEntity;
 import com.soaringroad.blog.entity.SrBlogEntity;
 import com.soaringroad.blog.entity.SrBlogEsEntity;
 import com.soaringroad.blog.entity.SrBlogH2Entity;
+import com.soaringroad.blog.repository.RedisRepository;
+import com.soaringroad.blog.util.TransformUtil;
 import com.soaringroad.blog.vo.SrBlogEntityTypeEnum;
 import com.soaringroad.blog.vo.SrBlogQueryEntity;
 
@@ -37,6 +39,9 @@ public abstract class AbstractSrBlogApiService<T extends AbstractSrBlogEntity, E
 
 	@Value("${app.entitytype}")
 	private SrBlogEntityTypeEnum entityType;
+	
+	@Autowired
+	private RedisRepository redisRepository;
 
 	/**
 	 * ObjectMapper
@@ -129,9 +134,21 @@ public abstract class AbstractSrBlogApiService<T extends AbstractSrBlogEntity, E
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
+	@SuppressWarnings("unchecked")
 	private SrBlogEntity callGet(E id) {
+		Object object = redisRepository.getValue(String.format(entityKey(), id));
+		if (object != null) {
+			Class<T> entityClass = (Class<T>) ParameterizedType.class.cast(this.getClass().getGenericSuperclass())
+					.getActualTypeArguments()[0];
+			return TransformUtil.parseMapToEntity(object, entityClass);
+		}
 		Optional<? extends SrBlogEntity> opt = getDao().findById(id);
-		return opt.isPresent() ? opt.get() : null;
+		if (!opt.isPresent()) {
+			return null;
+		}
+		SrBlogEntity result = opt.get();
+		redisRepository.setValue(result.redisKey(), result);
+		return result;
 	}
 
 	private Long callCount() {
@@ -143,15 +160,20 @@ public abstract class AbstractSrBlogApiService<T extends AbstractSrBlogEntity, E
 	}
 
 	private SrBlogEntity callPost(T entity) {
-		return getDao(entity).create(entity);
+		SrBlogEntity result = getDao(entity).create(entity);
+		redisRepository.setValue(result.redisKey(), result);
+		return result;
 	}
 
 	private SrBlogEntity callPut(T entity) {
-		return getDao(entity).save(entity);
+		SrBlogEntity result = getDao(entity).save(entity);
+		redisRepository.setValue(result.redisKey(), result);
+		return result;
 	}
 
 	private void callDelete(T entity) {
 		getDao(entity).delete(entity);
+		redisRepository.delete(entity.redisKey());
 	}
 
 	private SrBlogDao<T,? extends SrBlogEsEntity, ? extends SrBlogH2Entity, E> getDao(T srBlogEntity) {
@@ -222,4 +244,5 @@ public abstract class AbstractSrBlogApiService<T extends AbstractSrBlogEntity, E
 		return queryEntity;
 	}
 
+	protected abstract String entityKey();
 }

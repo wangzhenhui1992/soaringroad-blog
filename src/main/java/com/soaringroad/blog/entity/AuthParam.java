@@ -22,4 +22,9 @@ public class AuthParam extends AbstractSrBlogCommonEntity {
 	 */
 	private String password;
 
+	@Override
+	public String redisKey() {
+		return null;
+	}
+
 }

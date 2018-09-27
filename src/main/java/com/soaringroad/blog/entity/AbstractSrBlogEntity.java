@@ -2,6 +2,7 @@ package com.soaringroad.blog.entity;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.soaringroad.blog.core.SrBlogContextContainer;
 import com.soaringroad.blog.dao.AbstractSrBlogDao;
 
@@ -16,6 +17,7 @@ public abstract class AbstractSrBlogEntity implements SrBlogEntity {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	@JsonIgnore
 	public <A extends AbstractSrBlogEntity, E extends SrBlogEsEntity, H extends SrBlogH2Entity, I extends Serializable, T extends AbstractSrBlogDao<A, E, H, I>> T getDao() {
 		return SrBlogContextContainer.getBean(this.daoClass());
 	}
@@ -25,4 +27,5 @@ public abstract class AbstractSrBlogEntity implements SrBlogEntity {
 	public abstract <E extends SrBlogEsEntity, I extends Serializable> E toEsEntity(I id);
 
 	public abstract <H extends SrBlogH2Entity> H toH2Entity();
+	
 }
