@@ -45,7 +45,6 @@ public class SrBlogFilter implements Filter {
 		HttpServletResponse httpResponse = (HttpServletResponse)response;
 		String uri = httpRequest.getRequestURI();
 		log.info(String.format("收到请求 : %s ", uri));
-
 		// OPTIONS
 		if ("OPTIONS".equals(httpRequest.getMethod())) {
 			httpResponse.setStatus(HttpServletResponse.SC_OK);
@@ -56,7 +55,7 @@ public class SrBlogFilter implements Filter {
 		// 允许跨域
 		allowCros(httpResponse);
 
-		// 管理功能API认证
+		// API认证
 		if (!auth(httpRequest)) {
 			
 			httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED);

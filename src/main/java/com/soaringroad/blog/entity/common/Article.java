@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.ElementCollection;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -14,6 +13,7 @@ import com.soaringroad.blog.dao.impl.ArticleDao;
 import com.soaringroad.blog.entity.AbstractSrBlogEntity;
 import com.soaringroad.blog.entity.es.ArticleEs;
 import com.soaringroad.blog.entity.h2.ArticleH2;
+import static com.soaringroad.blog.util.SrBlogConsts.ENTITY_KEY_ARTICLE;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -131,5 +131,9 @@ public class Article extends AbstractSrBlogEntity {
 		return articleEs;
 	}
 
-	
+
+	@Override
+	public String redisKey() {
+		return String.format(ENTITY_KEY_ARTICLE, id);
+	}
 }
