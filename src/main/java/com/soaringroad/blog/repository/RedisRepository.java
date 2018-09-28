@@ -30,5 +30,6 @@ public interface RedisRepository {
 	void increaseHashValue(String key, String hashKey, double delta);
 	
 	void delete(String key);
-
+	
+	void expire(String key, long seconds);
 }

@@ -37,212 +37,212 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public abstract class AbstractSrBlogApiService<T extends AbstractSrBlogEntity, E extends Serializable> {
 
-	@Value("${app.entitytype}")
-	private SrBlogEntityTypeEnum entityType;
-	
-	@Autowired
-	private RedisRepository redisRepository;
+    @Value("${app.entitytype}")
+    private SrBlogEntityTypeEnum entityType;
+    
+    @Autowired
+    private RedisRepository redisRepository;
 
-	/**
-	 * ObjectMapper
-	 */
-	@Autowired
-	private ObjectMapper objectMapper;
+    /**
+     * ObjectMapper
+     */
+    @Autowired
+    private ObjectMapper objectMapper;
 
-	@RequestMapping(value = { "/{id:(?!^(?:search|count)$).*}",
-			"/{id:(?!^(?:search|count)$).*}" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<SrBlogEntity> get(@PathVariable E id) {
+    @RequestMapping(value = { "/{id:(?!^(?:search|count)$).*}",
+            "/{id:(?!^(?:search|count)$).*}" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SrBlogEntity> get(@PathVariable E id) {
 
-		if (!checkGet(id)) {
-			return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
-		}
-		log.info("GET:" + id);
-		SrBlogEntity entity = callGet(id);
-		log.info("GET返回:" + entity);
-		return entity == null ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
-				: new ResponseEntity<>(entity, HttpStatus.OK);
-	}
+        if (!checkGet(id)) {
+            return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+        log.info("GET:" + id);
+        SrBlogEntity entity = callGet(id);
+        log.info("GET返回:" + entity);
+        return entity == null ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
+                : new ResponseEntity<>(entity, HttpStatus.OK);
+    }
 
-	@RequestMapping(value = { "/search",
-			"/search/" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<SrBlogEntity>> search(@RequestParam String qStr) {
-		SrBlogQueryEntity queryEntity = parseQueryEntity(qStr);
-		if (!checkSearch(queryEntity)) {
-			return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
-		}
-		log.info("SEARCH:" + queryEntity);
-		Iterable<? extends SrBlogEntity> result = callSearch(queryEntity);
-		Iterator<? extends SrBlogEntity> iterator = result.iterator();
-		if (!iterator.hasNext()) {
-			log.info("SEARCH返回:未找到数据");
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		}
-		List<SrBlogEntity> resultList = new ArrayList<SrBlogEntity>();
-		resultList.add(iterator.next());
-		while (iterator.hasNext()) {
-			resultList.add(iterator.next());
-		}
-		log.info("SEARCH返回:" + resultList);
-		return new ResponseEntity<>(resultList, HttpStatus.OK);
-	}
+    @RequestMapping(value = { "/search",
+            "/search/" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<SrBlogEntity>> search(@RequestParam String qStr) {
+        SrBlogQueryEntity queryEntity = parseQueryEntity(qStr);
+        if (!checkSearch(queryEntity)) {
+            return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+        log.info("SEARCH:" + queryEntity);
+        Iterable<? extends SrBlogEntity> result = callSearch(queryEntity);
+        Iterator<? extends SrBlogEntity> iterator = result.iterator();
+        if (!iterator.hasNext()) {
+            log.info("SEARCH返回:未找到数据");
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        List<SrBlogEntity> resultList = new ArrayList<SrBlogEntity>();
+        resultList.add(iterator.next());
+        while (iterator.hasNext()) {
+            resultList.add(iterator.next());
+        }
+        log.info("SEARCH返回:" + resultList);
+        return new ResponseEntity<>(resultList, HttpStatus.OK);
+    }
 
-	@RequestMapping(value = { "/count",
-			"/count/" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Long> count() {
+    @RequestMapping(value = { "/count",
+            "/count/" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Long> count() {
 
-		if (!checkCount()) {
-			return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
-		}
-		Long count = callCount();
-		log.info("GET返回:" + count);
-		return new ResponseEntity<>(count, HttpStatus.OK);
-	}
+        if (!checkCount()) {
+            return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+        Long count = callCount();
+        log.info("GET返回:" + count);
+        return new ResponseEntity<>(count, HttpStatus.OK);
+    }
 
-	@RequestMapping(value = "/", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<SrBlogEntity> post(@RequestBody T entity) {
-		if (!checkPost(entity)) {
-			return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
-		}
-		log.info("POST:" + entity);
-		SrBlogEntity result = callPost(entity);
-		log.info("POST返回:" + result);
-		return new ResponseEntity<>(result, HttpStatus.CREATED);
-	}
+    @RequestMapping(value = "/", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SrBlogEntity> post(@RequestBody T entity) {
+        if (!checkPost(entity)) {
+            return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+        log.info("POST:" + entity);
+        SrBlogEntity result = callPost(entity);
+        log.info("POST返回:" + result);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
+    }
 
-	@RequestMapping(value = { "/{id:(?!^(?:search|count)$).*}",
-			"/{id:(?!^(?:search|count)$).*}/" }, method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<SrBlogEntity> put(@RequestBody T entity) {
-		if (!checkPut(entity)) {
-			return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
-		}
-		log.info("PUT:" + entity);
-		SrBlogEntity result = callPut(entity);
-		log.info("PUT返回:" + result);
-		return new ResponseEntity<>(result, HttpStatus.CREATED);
-	}
+    @RequestMapping(value = { "/{id:(?!^(?:search|count)$).*}",
+            "/{id:(?!^(?:search|count)$).*}/" }, method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SrBlogEntity> put(@RequestBody T entity) {
+        if (!checkPut(entity)) {
+            return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+        log.info("PUT:" + entity);
+        SrBlogEntity result = callPut(entity);
+        log.info("PUT返回:" + result);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
+    }
 
-	@RequestMapping(value = { "/{id:(?!^(?:search|count)$).*}",
-			"/{id:(?!^(?:search|count)$).*}" }, method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<T> delete(@RequestBody T entity) {
-		if (!checkDelete(entity)) {
-			return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
-		}
-		log.info("DELETE:" + entity);
-		// TODO 通过ID去获取Entity，然后再删除
-		callDelete(entity);
-		log.info("DELETE返回:" + entity);
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-	}
+    @RequestMapping(value = { "/{id:(?!^(?:search|count)$).*}",
+            "/{id:(?!^(?:search|count)$).*}" }, method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<T> delete(@RequestBody T entity) {
+        if (!checkDelete(entity)) {
+            return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+        log.info("DELETE:" + entity);
+        // TODO 通过ID去获取Entity，然后再删除
+        callDelete(entity);
+        log.info("DELETE返回:" + entity);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
-	@SuppressWarnings("unchecked")
-	private SrBlogEntity callGet(E id) {
-		Object object = redisRepository.getValue(String.format(entityKey(), id));
-		if (object != null) {
-			Class<T> entityClass = (Class<T>) ParameterizedType.class.cast(this.getClass().getGenericSuperclass())
-					.getActualTypeArguments()[0];
-			return TransformUtil.parseMapToEntity(object, entityClass);
-		}
-		Optional<? extends SrBlogEntity> opt = getDao().findById(id);
-		if (!opt.isPresent()) {
-			return null;
-		}
-		SrBlogEntity result = opt.get();
-		redisRepository.setValue(result.redisKey(), result);
-		return result;
-	}
+    @SuppressWarnings("unchecked")
+    private SrBlogEntity callGet(E id) {
+        Object object = redisRepository.getValue(String.format(entityKey(), id));
+        if (object != null) {
+            Class<T> entityClass = (Class<T>) ParameterizedType.class.cast(this.getClass().getGenericSuperclass())
+                    .getActualTypeArguments()[0];
+            return TransformUtil.parseMapToEntity(object, entityClass);
+        }
+        Optional<? extends SrBlogEntity> opt = getDao().findById(id);
+        if (!opt.isPresent()) {
+            return null;
+        }
+        SrBlogEntity result = opt.get();
+        redisRepository.setValue(result.redisKey(), result);
+        return result;
+    }
 
-	private Long callCount() {
-		return getDao().count();
-	}
+    private Long callCount() {
+        return getDao().count();
+    }
 
-	private Iterable<? extends SrBlogEntity> callSearch(SrBlogQueryEntity q) {
-		return getDao().search(q);
-	}
+    private Iterable<? extends SrBlogEntity> callSearch(SrBlogQueryEntity q) {
+        return getDao().search(q);
+    }
 
-	private SrBlogEntity callPost(T entity) {
-		SrBlogEntity result = getDao(entity).create(entity);
-		redisRepository.setValue(result.redisKey(), result);
-		return result;
-	}
+    private SrBlogEntity callPost(T entity) {
+        SrBlogEntity result = getDao(entity).create(entity);
+        redisRepository.setValue(result.redisKey(), result);
+        return result;
+    }
 
-	private SrBlogEntity callPut(T entity) {
-		SrBlogEntity result = getDao(entity).save(entity);
-		redisRepository.setValue(result.redisKey(), result);
-		return result;
-	}
+    private SrBlogEntity callPut(T entity) {
+        SrBlogEntity result = getDao(entity).save(entity);
+        redisRepository.setValue(result.redisKey(), result);
+        return result;
+    }
 
-	private void callDelete(T entity) {
-		getDao(entity).delete(entity);
-		redisRepository.delete(entity.redisKey());
-	}
+    private void callDelete(T entity) {
+        getDao(entity).delete(entity);
+        redisRepository.delete(entity.redisKey());
+    }
 
-	private SrBlogDao<T,? extends SrBlogEsEntity, ? extends SrBlogH2Entity, E> getDao(T srBlogEntity) {
-		return srBlogEntity.getDao();
-	}
+    private SrBlogDao<T,? extends SrBlogEsEntity, ? extends SrBlogH2Entity, E> getDao(T srBlogEntity) {
+        return srBlogEntity.getDao();
+    }
 
-	private SrBlogDao<T, ? extends SrBlogEsEntity, ? extends SrBlogH2Entity, E> getDao() {
-		T newInstance = getInstance();
-		if (newInstance == null) {
-			return null;
-		}
-		return newInstance.getDao();
-	}
+    private SrBlogDao<T, ? extends SrBlogEsEntity, ? extends SrBlogH2Entity, E> getDao() {
+        T newInstance = getInstance();
+        if (newInstance == null) {
+            return null;
+        }
+        return newInstance.getDao();
+    }
 
-	@SuppressWarnings("unchecked")
-	private T getInstance() {
-		Class<T> entityClass = (Class<T>) ParameterizedType.class.cast(this.getClass().getGenericSuperclass())
-				.getActualTypeArguments()[0];
-		T newInstance = null;
-		try {
-			newInstance = entityClass.newInstance();
-		} catch (InstantiationException e) {
-			log.error("无法生成实例. class=" + entityClass, e);
-		} catch (IllegalAccessException e) {
-			log.error("无法生成实例. class=" + entityClass, e);
-		}
-		return newInstance;
-	}
+    @SuppressWarnings("unchecked")
+    private T getInstance() {
+        Class<T> entityClass = (Class<T>) ParameterizedType.class.cast(this.getClass().getGenericSuperclass())
+                .getActualTypeArguments()[0];
+        T newInstance = null;
+        try {
+            newInstance = entityClass.newInstance();
+        } catch (InstantiationException e) {
+            log.error("无法生成实例. class=" + entityClass, e);
+        } catch (IllegalAccessException e) {
+            log.error("无法生成实例. class=" + entityClass, e);
+        }
+        return newInstance;
+    }
 
-	protected boolean checkGet(E id) {
-		return false;
-	}
+    protected boolean checkGet(E id) {
+        return false;
+    }
 
-	protected boolean checkSearch(SrBlogQueryEntity q) {
-		return false;
-	}
+    protected boolean checkSearch(SrBlogQueryEntity q) {
+        return false;
+    }
 
-	protected boolean checkPost(T entity) {
-		return false;
-	}
+    protected boolean checkPost(T entity) {
+        return false;
+    }
 
-	protected boolean checkPut(T entity) {
-		return false;
-	}
+    protected boolean checkPut(T entity) {
+        return false;
+    }
 
-	protected boolean checkDelete(T entity) {
-		return false;
-	}
+    protected boolean checkDelete(T entity) {
+        return false;
+    }
 
-	protected boolean checkCount() {
-		return false;
-	}
+    protected boolean checkCount() {
+        return false;
+    }
 
-	private SrBlogQueryEntity parseQueryEntity(String qStr) {
-		if (qStr == null || qStr.isEmpty()) {
-			return null;
-		}
-		SrBlogQueryEntity queryEntity = null;
-		try {
-			queryEntity = objectMapper.readValue(qStr, SrBlogQueryEntity.class);
-		} catch (JsonParseException e) {
-			log.error("JSON转换错误", e);
-		} catch (JsonMappingException e) {
-			log.error("JSON转换错误", e);
-		} catch (IOException e) {
-			log.error("JSON转换错误", e);
-		}
-		return queryEntity;
-	}
+    private SrBlogQueryEntity parseQueryEntity(String qStr) {
+        if (qStr == null || qStr.isEmpty()) {
+            return null;
+        }
+        SrBlogQueryEntity queryEntity = null;
+        try {
+            queryEntity = objectMapper.readValue(qStr, SrBlogQueryEntity.class);
+        } catch (JsonParseException e) {
+            log.error("JSON转换错误", e);
+        } catch (JsonMappingException e) {
+            log.error("JSON转换错误", e);
+        } catch (IOException e) {
+            log.error("JSON转换错误", e);
+        }
+        return queryEntity;
+    }
 
-	protected abstract String entityKey();
+    protected abstract String entityKey();
 }
