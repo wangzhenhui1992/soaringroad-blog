@@ -28,6 +28,7 @@ import com.soaringroad.blog.entity.SrBlogEntity;
 import com.soaringroad.blog.entity.SrBlogEsEntity;
 import com.soaringroad.blog.entity.SrBlogH2Entity;
 import com.soaringroad.blog.repository.RedisRepository;
+import com.soaringroad.blog.util.SrBlogConsts;
 import com.soaringroad.blog.util.TransformUtil;
 import com.soaringroad.blog.vo.SrBlogEntityTypeEnum;
 import com.soaringroad.blog.vo.SrBlogQueryEntity;
@@ -137,17 +138,20 @@ public abstract class AbstractSrBlogApiService<T extends AbstractSrBlogEntity, E
     @SuppressWarnings("unchecked")
     private SrBlogEntity callGet(E id) {
         Object object = redisRepository.getValue(String.format(entityKey(), id));
+        SrBlogEntity result = null;
         if (object != null) {
             Class<T> entityClass = (Class<T>) ParameterizedType.class.cast(this.getClass().getGenericSuperclass())
                     .getActualTypeArguments()[0];
-            return TransformUtil.parseMapToEntity(object, entityClass);
+            result = TransformUtil.parseMapToEntity(object, entityClass);
+        } else {
+            Optional<? extends SrBlogEntity> opt = getDao().findById(id);
+            if (!opt.isPresent()) {
+                return null;
+            }
+            result = opt.get();
+            redisRepository.setValue(result.redisKey(), result);
         }
-        Optional<? extends SrBlogEntity> opt = getDao().findById(id);
-        if (!opt.isPresent()) {
-            return null;
-        }
-        SrBlogEntity result = opt.get();
-        redisRepository.setValue(result.redisKey(), result);
+        redisRepository.increaseValue(String.format(SrBlogConsts.REDIS_KEY_ARTICLE_VIEW_COUNT, id), 1);
         return result;
     }
 
