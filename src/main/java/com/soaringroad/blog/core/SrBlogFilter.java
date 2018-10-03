@@ -111,7 +111,7 @@ public class SrBlogFilter implements Filter {
 
         String uri = request.getRequestURI();
         // 管理功能API以外的请求可以通过
-        if (!uri.startsWith("/api/admin") || uri.equals("/api/admin/login")) {
+        if (!uri.startsWith("/api/admin") || uri.equals("/api/admin/login") || uri.startsWith("/api/admin/druid")) {
             return true;
         }
         String srToken = request.getHeader("Authorization");
