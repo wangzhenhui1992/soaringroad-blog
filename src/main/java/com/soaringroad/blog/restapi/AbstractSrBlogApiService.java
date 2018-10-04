@@ -1,3 +1,14 @@
+/******************************************************************
+*   _____                  _             _____                 _  *
+*  / ____|                (_)           |  __ \               | | *
+* | (___   ___   __ _ _ __ _ _ __   __ _| |__) |___   __ _  __| | *
+*  \___ \ / _ \ / _` | '__| | '_ \ / _` |  _  // _ \ / _` |/ _` | *
+*  ____) | (_) | (_| | |  | | | | | (_| | | \ \ (_) | (_| | (_| | *
+* |_____/ \___/ \__,_|_|  |_|_| |_|\__, |_|  \_\___/ \__,_|\__,_| *
+*                                   __/ |                         *
+*                                  |___/                          *
+* Copyright ©2017-2018 www.soaringroad.com | All rights reserved. *
+******************************************************************/
 package com.soaringroad.blog.restapi;
 
 import java.io.IOException;
@@ -33,9 +44,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public abstract class AbstractSrBlogApiService<T extends SrBlogEntity, E extends Serializable> {
-
-    @Autowired
-    private RedisRepository redisRepository;
 
     /**
      * ObjectMapper
@@ -128,24 +136,9 @@ public abstract class AbstractSrBlogApiService<T extends SrBlogEntity, E extends
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @SuppressWarnings("unchecked")
     private SrBlogEntity callGet(E id) {
-        Object object = redisRepository.getValue(String.format(entityKey(), id));
-        SrBlogEntity result = null;
-        if (object != null) {
-            Class<T> entityClass = (Class<T>) ParameterizedType.class.cast(this.getClass().getGenericSuperclass())
-                    .getActualTypeArguments()[0];
-            result = TransformUtil.parseMapToEntity(object, entityClass);
-        } else {
-            Optional<? extends SrBlogEntity> opt = getDao().findById(id);
-            if (!opt.isPresent()) {
-                return null;
-            }
-            result = opt.get();
-            redisRepository.setValue(result.redisKey(), result);
-        }
-        redisRepository.increaseValue(String.format(SrBlogConsts.REDIS_KEY_ARTICLE_VIEW_COUNT, id), 1);
-        return result;
+        Optional<? extends SrBlogEntity> opt = getDao().findById(id);
+        return opt.isPresent() ? opt.get() : null;
     }
 
     private Long callCount() {
@@ -157,20 +150,15 @@ public abstract class AbstractSrBlogApiService<T extends SrBlogEntity, E extends
     }
 
     private SrBlogEntity callPost(T entity) {
-        SrBlogEntity result = getDao(entity).create(entity);
-        redisRepository.setValue(result.redisKey(), result);
-        return result;
+        return getDao(entity).create(entity);
     }
 
     private SrBlogEntity callPut(T entity) {
-        SrBlogEntity result = getDao(entity).save(entity);
-        redisRepository.setValue(result.redisKey(), result);
-        return result;
+        return getDao(entity).save(entity);
     }
 
     private void callDelete(T entity) {
         getDao(entity).delete(entity);
-        redisRepository.delete(entity.redisKey());
     }
 
     private SrBlogDao<T, E> getDao(T srBlogEntity) {
@@ -240,6 +228,4 @@ public abstract class AbstractSrBlogApiService<T extends SrBlogEntity, E extends
         }
         return queryEntity;
     }
-
-    protected abstract String entityKey();
 }
