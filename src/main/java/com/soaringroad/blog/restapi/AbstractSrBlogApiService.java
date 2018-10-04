@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,22 +24,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.soaringroad.blog.dao.SrBlogDao;
 import com.soaringroad.blog.entity.AbstractSrBlogEntity;
 import com.soaringroad.blog.entity.SrBlogEntity;
-import com.soaringroad.blog.entity.SrBlogEsEntity;
-import com.soaringroad.blog.entity.SrBlogH2Entity;
 import com.soaringroad.blog.repository.RedisRepository;
 import com.soaringroad.blog.util.SrBlogConsts;
 import com.soaringroad.blog.util.TransformUtil;
-import com.soaringroad.blog.vo.SrBlogEntityTypeEnum;
 import com.soaringroad.blog.vo.SrBlogQueryEntity;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public abstract class AbstractSrBlogApiService<T extends AbstractSrBlogEntity, E extends Serializable> {
+public abstract class AbstractSrBlogApiService<T extends SrBlogEntity, E extends Serializable> {
 
-    @Value("${app.entitytype}")
-    private SrBlogEntityTypeEnum entityType;
-    
     @Autowired
     private RedisRepository redisRepository;
 
@@ -180,11 +173,11 @@ public abstract class AbstractSrBlogApiService<T extends AbstractSrBlogEntity, E
         redisRepository.delete(entity.redisKey());
     }
 
-    private SrBlogDao<T,? extends SrBlogEsEntity, ? extends SrBlogH2Entity, E> getDao(T srBlogEntity) {
-        return srBlogEntity.getDao();
+    private SrBlogDao<T, E> getDao(T srBlogEntity) {
+        return ((AbstractSrBlogEntity) srBlogEntity).getDao();
     }
 
-    private SrBlogDao<T, ? extends SrBlogEsEntity, ? extends SrBlogH2Entity, E> getDao() {
+    private SrBlogDao<T, E> getDao() {
         T newInstance = getInstance();
         if (newInstance == null) {
             return null;

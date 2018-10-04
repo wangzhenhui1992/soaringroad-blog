@@ -7,7 +7,7 @@ import org.springframework.data.domain.Page;
 import com.soaringroad.blog.entity.SrBlogEntity;
 import com.soaringroad.blog.vo.SrBlogQueryEntity;
 
-public interface SrBlogDao<A,E,H,I> {
+public interface SrBlogDao<A,I> {
 	Optional<? extends SrBlogEntity> findById(I id);
 
 	Page<? extends SrBlogEntity> search(SrBlogQueryEntity queryEntity);
