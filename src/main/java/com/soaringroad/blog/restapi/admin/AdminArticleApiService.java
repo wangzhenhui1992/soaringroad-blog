@@ -10,53 +10,51 @@ import static com.soaringroad.blog.util.SrBlogConsts.ENTITY_KEY_ARTICLE;
 
 @RestController
 @RequestMapping("/api/admin/article")
-public class AdminArticleApiService extends AbstractSrBlogApiService<Article,Integer>{
+public class AdminArticleApiService extends AbstractSrBlogApiService<Article, Integer> {
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected boolean checkGet(Integer id) {
+        return true;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected boolean checkGet(Integer id) {
-		return true;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected boolean checkPost(Article entity) {
+        return true;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected boolean checkPost(Article entity) {
-		return true;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected boolean checkPut(Article entity) {
+        return true;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected boolean checkPut(Article entity) {
-		return true;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected boolean checkDelete(Article entity) {
+        return true;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected boolean checkDelete(Article entity) {
-		return true;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected boolean checkSearch(SrBlogQueryEntity q) {
+        return true;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected boolean checkSearch(SrBlogQueryEntity q) {
-		return true;
-	}
+    @Override
+    protected String entityKey() {
+        return ENTITY_KEY_ARTICLE;
+    }
 
-	@Override
-	protected String entityKey() {
-		return ENTITY_KEY_ARTICLE;
-	}
-
-	
 }

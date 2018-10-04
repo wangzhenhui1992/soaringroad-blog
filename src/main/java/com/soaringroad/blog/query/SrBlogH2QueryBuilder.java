@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
-import com.soaringroad.blog.entity.SrBlogH2Entity;
+import com.soaringroad.blog.entity.SrBlogEntity;
 import com.soaringroad.blog.vo.SrBlogH2Query;
 import com.soaringroad.blog.vo.SrBlogQueryCondition;
 import com.soaringroad.blog.vo.SrBlogQueryEntity;
@@ -15,7 +15,7 @@ import com.soaringroad.blog.vo.SrBlogQuerySort;
 import com.soaringroad.blog.vo.SrBlogQuerySortOrderEnum;
 import com.soaringroad.blog.vo.SrBlogSpecifier;
 
-public class SrBlogH2QueryBuilder<T extends SrBlogH2Entity> implements SrBlogQueryBuilder {
+public class SrBlogH2QueryBuilder<T extends SrBlogEntity> implements SrBlogQueryBuilder {
 
 	private SrBlogQueryEntity queryEntity;
 

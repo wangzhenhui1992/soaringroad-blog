@@ -5,12 +5,12 @@ import javax.validation.constraints.NotNull;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
-import com.soaringroad.blog.entity.SrBlogH2Entity;
+import com.soaringroad.blog.entity.SrBlogEntity;
 
 import lombok.Data;
 
 @Data
-public class SrBlogH2Query<T extends SrBlogH2Entity> {
+public class SrBlogH2Query<T extends SrBlogEntity> {
 	@NotNull
 	private Pageable pageRequest;
 	
