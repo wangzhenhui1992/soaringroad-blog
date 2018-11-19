@@ -1,4 +1,4 @@
-package com.soaringroad.blog.data.info;
+package com.soaringroad.blog.setting;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

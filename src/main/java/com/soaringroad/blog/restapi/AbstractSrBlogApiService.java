@@ -136,36 +136,36 @@ public abstract class AbstractSrBlogApiService<T extends SrBlogEntity, E extends
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    private SrBlogEntity callGet(E id) {
+    protected SrBlogEntity callGet(E id) {
         Optional<? extends SrBlogEntity> opt = getDao().findById(id);
         return opt.isPresent() ? opt.get() : null;
     }
 
-    private Long callCount() {
+    protected Long callCount() {
         return getDao().count();
     }
 
-    private Iterable<? extends SrBlogEntity> callSearch(SrBlogQueryEntity q) {
+    protected Iterable<? extends SrBlogEntity> callSearch(SrBlogQueryEntity q) {
         return getDao().search(q);
     }
 
-    private SrBlogEntity callPost(T entity) {
+    protected SrBlogEntity callPost(T entity) {
         return getDao(entity).create(entity);
     }
 
-    private SrBlogEntity callPut(T entity) {
+    protected SrBlogEntity callPut(T entity) {
         return getDao(entity).save(entity);
     }
 
-    private void callDelete(T entity) {
+    protected void callDelete(T entity) {
         getDao(entity).delete(entity);
     }
 
-    private SrBlogDao<T, E> getDao(T srBlogEntity) {
+    protected SrBlogDao<T, E> getDao(T srBlogEntity) {
         return ((AbstractSrBlogEntity) srBlogEntity).getDao();
     }
 
-    private SrBlogDao<T, E> getDao() {
+    protected SrBlogDao<T, E> getDao() {
         T newInstance = getInstance();
         if (newInstance == null) {
             return null;

@@ -11,16 +11,20 @@
 ******************************************************************/
 package com.soaringroad.blog.dao.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import com.soaringroad.blog.core.SrBlogContextContainer;
 import com.soaringroad.blog.dao.AbstractSrBlogDao;
 import com.soaringroad.blog.entity.SrBlogEntity;
 import com.soaringroad.blog.entity.common.Article;
+import com.soaringroad.blog.repository.ElasticSearchRepository;
 import com.soaringroad.blog.repository.RedisRepository;
 import com.soaringroad.blog.repository.SrBlogH2Repository;
 import com.soaringroad.blog.repository.h2.ArticleH2Repository;
@@ -33,6 +37,9 @@ public class ArticleDao extends AbstractSrBlogDao<Article, Long> {
 
     @Autowired
     private RedisRepository redisRepository;
+    
+    @Autowired
+    private ElasticSearchRepository elasticSearchRepository;
 
     @Override
     protected SrBlogH2Repository<Article, Long> getH2Repository() {
@@ -83,7 +90,7 @@ public class ArticleDao extends AbstractSrBlogDao<Article, Long> {
 
     @Override
     public Page<Article> search(SrBlogQueryEntity queryEntity) {
-        Page<Article> page = super.search(queryEntity);
+        Page<Article> page = searchEs(queryEntity);
         if (page == null) {
             return null;
         }
@@ -93,6 +100,16 @@ public class ArticleDao extends AbstractSrBlogDao<Article, Long> {
             article.setView(view);
         }
         return page;
+    }
+    
+    private Page<Article> searchDb(SrBlogQueryEntity queryEntity) {
+        return super.search(queryEntity);
+    }
+    
+    private Page<Article> searchEs(SrBlogQueryEntity queryEntity) {
+        List<Article> articleList = elasticSearchRepository.searchArticle(queryEntity);
+        Page<Article> articlePages = new PageImpl<Article>(articleList, Pageable.unpaged(), articleList.size()); 
+        return articlePages;
     }
 
 }
