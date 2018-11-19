@@ -23,6 +23,7 @@ public class SrBlogH2QueryBuilder<T extends SrBlogEntity> implements SrBlogQuery
 		this.queryEntity = queryEntity;
 	}
 
+	@Override
 	public SrBlogH2Query<T> build() {
 		Pageable pageable = buildH2Page(queryEntity);
 		Specification<T> spec = buildH2Spec();

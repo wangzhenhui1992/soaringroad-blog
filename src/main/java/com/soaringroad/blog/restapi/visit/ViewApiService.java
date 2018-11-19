@@ -27,6 +27,7 @@ public class ViewApiService {
             "/viewcount/" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Long> viewCount() {
         Object object = redisRepository.getValue(SrBlogConsts.REDIS_KEY_VIEW_COUNT);
+        System.out.println(this.toString());
         return object == null ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
                 : new ResponseEntity<>(Long.valueOf(object.toString()), HttpStatus.OK);
     }
