@@ -92,10 +92,10 @@
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk -->
-        <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk</artifactId>
-        </dependency>
+<!--         <dependency> -->
+<!--             <groupId>com.amazonaws</groupId> -->
+<!--             <artifactId>aws-java-sdk</artifactId> -->
+<!--         </dependency> -->
 
         <!-- https://mvnrepository.com/artifact/com.auth0/java-jwt -->
         <dependency>
@@ -129,11 +129,11 @@
     <dependencyManagement>
         <dependencies>
             <!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk -->
-            <dependency>
-                <groupId>com.amazonaws</groupId>
-                <artifactId>aws-java-sdk</artifactId>
-                <version>1.11.372</version>
-            </dependency>
+<!--             <dependency> -->
+<!--                 <groupId>com.amazonaws</groupId> -->
+<!--                 <artifactId>aws-java-sdk</artifactId> -->
+<!--                 <version>1.11.372</version> -->
+<!--             </dependency> -->
             <!-- https://mvnrepository.com/artifact/com.auth0/java-jwt -->
             <dependency>
                 <groupId>com.auth0</groupId>

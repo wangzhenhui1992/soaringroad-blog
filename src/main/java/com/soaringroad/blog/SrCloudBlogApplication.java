@@ -7,8 +7,6 @@ import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration;
 import org.springframework.cache.annotation.EnableCaching;
 
-import com.amazonaws.ClientConfiguration;
-
 /**
  * 云博客应用主程序
  * 
