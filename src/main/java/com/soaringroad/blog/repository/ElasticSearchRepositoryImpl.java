@@ -20,27 +20,23 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.xcontent.XContentType;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
-import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.soaringroad.blog.entity.common.Article;
-import com.soaringroad.blog.vo.SrBlogQueryCondition;
+import com.soaringroad.blog.query.SrBlogEsRestQueryBuilder;
 import com.soaringroad.blog.vo.SrBlogQueryEntity;
-import com.soaringroad.blog.vo.SrBlogQuerySort;
-import com.soaringroad.blog.vo.SrBlogQuerySortOrderEnum;
 
 import lombok.extern.slf4j.Slf4j;
 
 /**
  * <pre>
+ * // TODO 暂时作为ArticleEsRepository使用，之后需要抽象化
  * </pre>
  * 
  * @author wangzhenhui1992
@@ -73,58 +69,24 @@ public class ElasticSearchRepositoryImpl implements ElasticSearchRepository {
             log.error("无法完成Index请求", e);
             return false;
         }
+        // TODO response解析
         return true;
     }
-    
+
     @Override
     public List<Article> searchArticle(SrBlogQueryEntity entity) {
-        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-        SrBlogQueryCondition[] queryConditions = entity.getQueryConditions();
-        if (queryConditions == null || queryConditions.length == 0) {
-            boolQueryBuilder.must(QueryBuilders.matchAllQuery());
-        } else {
-            for (SrBlogQueryCondition condition: queryConditions) {
-                switch (condition.getOption()) {
-                case EQ:
-                    boolQueryBuilder.must(QueryBuilders.matchQuery(condition.getName(), condition.getValue()));
-                    break;
-                default:
-                    continue;
-                }
-            }
-        }
-        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
-        SrBlogQuerySort[] querySorts = entity.getQuerySort();
-        if (querySorts != null && querySorts.length >0) {
-            for (SrBlogQuerySort sort: querySorts) {
-                sourceBuilder.sort(sort.getName(), sort.getSortOrder() == SrBlogQuerySortOrderEnum.ASC ? SortOrder.ASC: SortOrder.DESC);
-            }
-        }
-        int pageNumber = entity.getPageNumber() == null ? 0 : entity.getPageNumber();
-        int queryNumber = entity.getQueryNumber() == null ? 10 : entity.getQueryNumber(); 
-        sourceBuilder.from(pageNumber * queryNumber);
-        sourceBuilder.size(queryNumber);
-        sourceBuilder.query(boolQueryBuilder);
+        SearchSourceBuilder sourceBuilder = new SrBlogEsRestQueryBuilder(entity).build();
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.indices("article").types("all").source(sourceBuilder);
         SearchResponse response = null;
         try {
             response = this.restClient.search(searchRequest, RequestOptions.DEFAULT);
         } catch (IOException e) {
-            log.error("无法完成Search请求",e);
+            log.error("无法完成Search请求", e);
+            return null;
         }
-        SearchHits searchHits = response.getHits();
-        SearchHit[] hits= searchHits.getHits();
-        List<Article> articles = Arrays.asList(hits).stream().map(hit->{
-            Article article =  null;
-            try {
-                article = objectMapper.readValue(hit.getSourceAsString(), Article.class);
-            } catch(Exception e) {
-                log.warn("无法反JSON化",e);
-                return null;
-            }
-            return article;
-        }).collect(Collectors.toList());
+        // TODO response解析
+        List<Article> articles = buildArticles(response);
         return articles;
     }
 
@@ -181,5 +143,21 @@ public class ElasticSearchRepositoryImpl implements ElasticSearchRepository {
         } catch (IOException e) {
             log.warn("无法关闭restClient");
         }
+    }
+
+    private List<Article> buildArticles(SearchResponse response) {
+        SearchHits searchHits = response.getHits();
+        SearchHit[] hits = searchHits.getHits();
+        List<Article> articles = Arrays.asList(hits).stream().map(hit -> {
+            Article article = null;
+            try {
+                article = objectMapper.readValue(hit.getSourceAsString(), Article.class);
+            } catch (Exception e) {
+                log.warn("无法反JSON化", e);
+                return null;
+            }
+            return article;
+        }).collect(Collectors.toList());
+        return articles;
     }
 }
