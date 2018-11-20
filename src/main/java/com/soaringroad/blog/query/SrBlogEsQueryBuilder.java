@@ -9,13 +9,12 @@ import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
 
+import com.soaringroad.blog.util.ElasticsearchUtil;
 import com.soaringroad.blog.vo.SrBlogQueryCondition;
 import com.soaringroad.blog.vo.SrBlogQueryEntity;
-import com.soaringroad.blog.vo.SrBlogQueryOptionEnum;
 import com.soaringroad.blog.vo.SrBlogQuerySort;
 import com.soaringroad.blog.vo.SrBlogQuerySortOrderEnum;
 
-// TODO Query Number and Page
 public class SrBlogEsQueryBuilder implements SrBlogQueryBuilder {
 
     private SrBlogQueryEntity queryEntity;
@@ -34,7 +33,7 @@ public class SrBlogEsQueryBuilder implements SrBlogQueryBuilder {
         SrBlogQuerySort[] querySorts = queryEntity.getQuerySort();
         NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
         BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
-        buildEsQueryConditions(queryConditions, queryBuilder);
+        ElasticsearchUtil.buildEsQueryConditions(queryConditions, queryBuilder);
         nativeSearchQueryBuilder.withQuery(queryBuilder);
         buildEsSorts(querySorts, nativeSearchQueryBuilder);
         return nativeSearchQueryBuilder.build();
@@ -50,30 +49,6 @@ public class SrBlogEsQueryBuilder implements SrBlogQueryBuilder {
             nativeSearchQueryBuilder.withSort(new FieldSortBuilder(name)
                     .order(SrBlogQuerySortOrderEnum.ASC.equals(sortOrder) ? SortOrder.ASC : SortOrder.DESC));
         }
-
     }
 
-    private static void buildEsQueryConditions(SrBlogQueryCondition[] queryConditions, BoolQueryBuilder queryBuilder) {
-        if (queryConditions == null || queryConditions.length == 0) {
-            return;
-        }
-        for (SrBlogQueryCondition queryCondition : queryConditions) {
-            String name = queryCondition.getName();
-            Object value = queryCondition.getValue();
-            SrBlogQueryOptionEnum queryOption = queryCondition.getOption();
-            switch (queryOption) {
-            case EQ:
-                queryBuilder.must(QueryBuilders.matchPhraseQuery(name, value));
-                break;
-            case GEQ:
-                queryBuilder.must(QueryBuilders.rangeQuery(name).from(value));
-                break;
-            case LEQ:
-                queryBuilder.must(QueryBuilders.rangeQuery(name).to(value));
-                break;
-            default:
-                break;
-            }
-        }
-    }
 }
