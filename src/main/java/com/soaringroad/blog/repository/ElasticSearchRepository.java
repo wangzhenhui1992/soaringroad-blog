@@ -13,4 +13,6 @@ public interface ElasticSearchRepository {
 
     List<Article> searchArticle(SrBlogQueryEntity entity);
 
+    boolean deleteArticle(Article article);
+
 }

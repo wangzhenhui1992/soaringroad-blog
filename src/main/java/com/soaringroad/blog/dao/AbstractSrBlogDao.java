@@ -68,7 +68,7 @@ public abstract class AbstractSrBlogDao<A extends SrBlogEntity, I extends Serial
      * {@inheritDoc}
      */
     @Override
-    public SrBlogEntity create(A entity) {
+    public A create(A entity) {
         return saveH2(entity);
     }
     
