@@ -12,6 +12,8 @@ import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.get.GetIndexRequest;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
+import org.elasticsearch.action.delete.DeleteRequest;
+import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequest;
@@ -65,6 +67,20 @@ public class ElasticSearchRepositoryImpl implements ElasticSearchRepository {
         IndexResponse response = null;
         try {
             response = restClient.index(request, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            log.error("无法完成Index请求", e);
+            return false;
+        }
+        // TODO response解析
+        return true;
+    }
+
+    @Override
+    public boolean deleteArticle(Article article) {
+        DeleteRequest request = new DeleteRequest().index("article").type("all").id(article.getId().toString());
+        DeleteResponse response = null;
+        try {
+            response = restClient.delete(request, RequestOptions.DEFAULT);
         } catch (IOException e) {
             log.error("无法完成Index请求", e);
             return false;

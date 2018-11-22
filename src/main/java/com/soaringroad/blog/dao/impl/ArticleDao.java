@@ -72,20 +72,25 @@ public class ArticleDao extends AbstractSrBlogDao<Article, Long> {
 
     @Override
     public Article save(Article entity) {
-        redisRepository.setValue(String.format(SrBlogConsts.ENTITY_KEY_ARTICLE, entity.getId()), entity);
-        return super.save(entity);
+        Article newArticle = super.save(entity);
+        redisRepository.setValue(String.format(SrBlogConsts.ENTITY_KEY_ARTICLE, newArticle.getId()), newArticle);
+        elasticSearchRepository.indexArticle(newArticle);
+        return newArticle;
     }
 
     @Override
     public void delete(Article entity) {
-        redisRepository.delete(String.format(SrBlogConsts.ENTITY_KEY_ARTICLE, entity.getId()));
         super.delete(entity);
+        redisRepository.delete(String.format(SrBlogConsts.ENTITY_KEY_ARTICLE, entity.getId()));
+        elasticSearchRepository.deleteArticle(entity);
     }
 
     @Override
-    public SrBlogEntity create(Article entity) {
-        redisRepository.setValue(String.format(SrBlogConsts.ENTITY_KEY_ARTICLE, entity.getId()), entity);
-        return super.create(entity);
+    public Article create(Article entity) {
+        Article newArticle = super.create(entity);
+        redisRepository.setValue(String.format(SrBlogConsts.ENTITY_KEY_ARTICLE, newArticle.getId()), newArticle);
+        elasticSearchRepository.indexArticle(newArticle);
+        return newArticle;
     }
 
     @Override
