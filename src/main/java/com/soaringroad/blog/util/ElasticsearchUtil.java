@@ -29,6 +29,8 @@ public class ElasticsearchUtil {
             case LEQ:
                 queryBuilder.must(QueryBuilders.rangeQuery(name).to(value));
                 break;
+            case MEMBER:
+                queryBuilder.must(QueryBuilders.matchPhraseQuery(name, value));
             default:
                 break;
             }
