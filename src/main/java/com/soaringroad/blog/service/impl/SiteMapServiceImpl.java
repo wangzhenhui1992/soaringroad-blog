@@ -25,9 +25,9 @@ public class SiteMapServiceImpl implements SiteMapService {
         Document doc = DocumentHelper.createDocument();
         Element root = doc.addElement("urlset");
         root.addAttribute("xmlns", "http://www.sitemaps.org/schemas/sitemap/0.9");
-        root.addAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-        root.addAttribute("xsi:schemaLocation",
-                "http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd");
+//        root.addAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+//        root.addAttribute("xsi:schemaLocation",
+//                "http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd");
         Element host = root.addElement("url");
         host.addElement("loc").setText("http://www.soaringroad.com");
         host.addElement("changefreq").setText("daily");
