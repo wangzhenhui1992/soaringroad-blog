@@ -23,7 +23,7 @@ public class SiteMapServiceImpl implements SiteMapService {
     public Document generateSiteMap() {
         Iterable<Article> itr = articleRepo.findAll();
         Document doc = DocumentHelper.createDocument();
-        Element root = doc.addElement("urlset","http://www.sitemaps.org/schemas/sitemap/0.9");
+        Element root = doc.addElement("urlset", "http://www.sitemaps.org/schemas/sitemap/0.9");
 //        root.addAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
 //        root.addAttribute("xsi:schemaLocation",
 //                "http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd");
