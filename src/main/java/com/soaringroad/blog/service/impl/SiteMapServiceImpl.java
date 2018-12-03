@@ -35,7 +35,7 @@ public class SiteMapServiceImpl implements SiteMapService {
         Set<String> labels = new HashSet<String>();
         for (Article article : itr) {
             Element url = root.addElement("url");
-            url.addElement("loc").setText("http://wwww.soaringroad.com/article/" + article.getId());
+            url.addElement("loc").setText("http://www.soaringroad.com/article/" + article.getId());
 //            Element lastmod = url.addElement("lastmod");
             url.addElement("changefreq").setText("daily");
             url.addElement("priority").setText("0.8");
@@ -44,7 +44,7 @@ public class SiteMapServiceImpl implements SiteMapService {
         }
         for (String category : categories) {
             Element url = root.addElement("url");
-            url.addElement("loc").setText("http://wwww.soaringroad.com/result/category/" + category);
+            url.addElement("loc").setText("http://www.soaringroad.com/result/category/" + category);
 //            Element lastmod = url.addElement("lastmod");
             url.addElement("changefreq").setText("weekly");
             url.addElement("priority").setText("0.8");
@@ -52,7 +52,7 @@ public class SiteMapServiceImpl implements SiteMapService {
 
         for (String label : labels) {
             Element url = root.addElement("url");
-            url.addElement("loc").setText("http://wwww.soaringroad.com/result/label/" + label);
+            url.addElement("loc").setText("http://www.soaringroad.com/result/label/" + label);
 //            Element lastmod = url.addElement("lastmod");
             url.addElement("changefreq").setText("weekly");
             url.addElement("priority").setText("0.8");
