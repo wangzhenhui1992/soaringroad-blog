@@ -29,7 +29,6 @@ import javax.net.ssl.SSLContext;
 
 import org.apache.http.Header;
 import org.apache.http.HttpHost;
-import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -37,10 +36,8 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.apache.http.impl.nio.reactor.IOReactorConfig;
 import org.apache.http.message.BasicHeader;
-import org.apache.http.nio.protocol.HttpAsyncResponseConsumer;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.ssl.SSLContexts;
-import org.elasticsearch.client.HttpAsyncResponseConsumerFactory;
 import org.elasticsearch.client.Node;
 import org.elasticsearch.client.NodeSelector;
 import org.elasticsearch.client.RestClient;
@@ -63,14 +60,13 @@ import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.DispatcherServlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.soaringroad.blog.repository.ElasticSearchRepository;
-import com.soaringroad.blog.repository.ElasticSearchRepositoryImpl;
 import com.soaringroad.blog.setting.ElasticSearchInfo;
 import com.soaringroad.blog.setting.RedisInfo;
 import com.soaringroad.blog.vo.SrBlogAuthInfo;
@@ -103,6 +99,12 @@ public class SrBlogConfig {
     @Bean
     public ObjectMapper objectMapper() {
         return new ObjectMapper();
+    }
+    
+    /***** RestTemplate *****/
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 
     /***** CorsFilter *****/

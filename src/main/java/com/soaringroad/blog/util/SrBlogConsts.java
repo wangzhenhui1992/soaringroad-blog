@@ -67,9 +67,22 @@ public final class SrBlogConsts {
      */
     public static final String HTTP_HEADER_HTTP_CLIENT_IP = "HTTP_CLIENT_IP";
     
+    //------------------------------------------------------------------//
+    // API
+    //-------------------------------------------------------------------//
     /**
      * API : /api/
      */
     public static final String API_PATTERN = "/api/";
+    
+    //------------------------------------------------------------------//
+    // URL
+    //-------------------------------------------------------------------//
+    public static final String ARTICTLE_URL_TEMPLATE = "http://www.soaringroad.com/article/%d";
+    public static final String LABEL_URL_TEMPLATE = "http://www.soaringroad.com/label/%s";
+    public static final String CATEGORY_URL_TEMPLATE = "http://www.soaringroad.com/category/%s";
+    public static final String HOME_URL = "http://www.soaringroad.com";
+    public static final String INTRODUCTION_URL = "http://www.soaringroad.com/myself";
+    public static final String BAIDU_COMMIT_URL_TEMPLATE = "http://data.zz.baidu.com/urls?site=www.soaringroad.com&token=%s";
     
 }
