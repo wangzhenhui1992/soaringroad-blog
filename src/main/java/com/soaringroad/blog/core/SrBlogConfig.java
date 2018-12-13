@@ -60,6 +60,7 @@ import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -78,6 +79,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @Slf4j
+@EnableScheduling
 public class SrBlogConfig {
 
     @Value("${app.allowcros}")
