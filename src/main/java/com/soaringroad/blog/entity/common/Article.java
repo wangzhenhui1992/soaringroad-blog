@@ -2,13 +2,13 @@ package com.soaringroad.blog.entity.common;
 
 import static com.soaringroad.blog.util.SrBlogConsts.ENTITY_KEY_ARTICLE;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
@@ -16,10 +16,8 @@ import javax.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.soaringroad.blog.dao.AbstractSrBlogDao;
 import com.soaringroad.blog.dao.impl.ArticleDao;
 import com.soaringroad.blog.entity.AbstractSrBlogEntity;
-import com.soaringroad.blog.entity.SrBlogEntity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -54,7 +52,7 @@ public class Article extends AbstractSrBlogEntity{
     /**
      * 标签
      */
-    @ElementCollection(targetClass=String.class)
+    @ElementCollection(targetClass=String.class, fetch=FetchType.EAGER)
     private List<String> labels;
 
     /**
