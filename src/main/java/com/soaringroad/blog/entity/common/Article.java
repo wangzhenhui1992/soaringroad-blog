@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -58,7 +59,7 @@ public class Article extends AbstractSrBlogEntity{
     /**
      * 标签
      */
-    @ElementCollection(targetClass=String.class, fetch=FetchType.EAGER)
+    @OneToMany(fetch=FetchType.EAGER)
     private List<String> keywords;
 
     /**
