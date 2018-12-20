@@ -54,6 +54,12 @@ public class Article extends AbstractSrBlogEntity{
      */
     @ElementCollection(targetClass=String.class, fetch=FetchType.EAGER)
     private List<String> labels;
+    
+    /**
+     * 标签
+     */
+    @ElementCollection(targetClass=String.class, fetch=FetchType.EAGER)
+    private List<String> keywords;
 
     /**
      * 文章标题
