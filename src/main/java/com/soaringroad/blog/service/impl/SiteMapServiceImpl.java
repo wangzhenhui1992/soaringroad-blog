@@ -23,19 +23,19 @@ public class SiteMapServiceImpl implements SiteMapService {
     public Document generateSiteMap() {
         Iterable<Article> itr = articleRepo.findAll();
         Document doc = DocumentHelper.createDocument();
-        Element root = doc.addElement("urlset", "http://www.sitemaps.org/schemas/sitemap/0.9");
+        Element root = doc.addElement("urlset", "https://www.sitemaps.org/schemas/sitemap/0.9");
 //        root.addAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
 //        root.addAttribute("xsi:schemaLocation",
 //                "http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd");
         Element host = root.addElement("url");
-        host.addElement("loc").setText("http://www.soaringroad.com");
+        host.addElement("loc").setText("https://www.soaringroad.com");
         host.addElement("changefreq").setText("daily");
         host.addElement("priority").setText("1.0");
         Set<String> categories = new HashSet<String>();
         Set<String> labels = new HashSet<String>();
         for (Article article : itr) {
             Element url = root.addElement("url");
-            url.addElement("loc").setText("http://www.soaringroad.com/article/" + article.getId());
+            url.addElement("loc").setText("https://www.soaringroad.com/article/" + article.getId());
 //            Element lastmod = url.addElement("lastmod");
             url.addElement("changefreq").setText("daily");
             url.addElement("priority").setText("0.8");
@@ -44,18 +44,18 @@ public class SiteMapServiceImpl implements SiteMapService {
         }
         for (String category : categories) {
             Element url = root.addElement("url");
-            url.addElement("loc").setText("http://www.soaringroad.com/result/category/" + category);
+            url.addElement("loc").setText("https://www.soaringroad.com/result/category/" + category);
 //            Element lastmod = url.addElement("lastmod");
-            url.addElement("changefreq").setText("weekly");
-            url.addElement("priority").setText("0.8");
+            url.addElement("changefreq").setText("daily");
+            url.addElement("priority").setText("0.5");
         }
 
         for (String label : labels) {
             Element url = root.addElement("url");
-            url.addElement("loc").setText("http://www.soaringroad.com/result/label/" + label);
+            url.addElement("loc").setText("https://www.soaringroad.com/result/label/" + label);
 //            Element lastmod = url.addElement("lastmod");
-            url.addElement("changefreq").setText("weekly");
-            url.addElement("priority").setText("0.8");
+            url.addElement("changefreq").setText("daily");
+            url.addElement("priority").setText("0.5");
         }
         return doc;
     }
