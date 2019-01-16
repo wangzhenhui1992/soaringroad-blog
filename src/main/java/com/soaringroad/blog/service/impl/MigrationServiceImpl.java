@@ -2,7 +2,9 @@ package com.soaringroad.blog.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -27,9 +29,16 @@ public class MigrationServiceImpl implements MigrationService {
     @Autowired
     private RestTemplate restTemplate;
 
+    private static final HttpHeaders httpHeaders;
+    static {
+        httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+    }
+
     @Override
     public void migrationToDynamoDB() {
         Iterable<Article> itr = repository.findAll();
+
         for (Article article : itr) {
             String jsonStr = null;
             try {
