@@ -1,11 +1,15 @@
 package com.soaringroad.blog.service.impl;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -19,6 +23,9 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 public class MigrationServiceImpl implements MigrationService {
+
+    @Value("${app.migration.api-gateway:localhost}")
+    private String apiGateway;
 
     @Autowired
     private SrBlogRepository<Article, Long> repository;
@@ -40,14 +47,19 @@ public class MigrationServiceImpl implements MigrationService {
         Iterable<Article> itr = repository.findAll();
 
         for (Article article : itr) {
+            if (CollectionUtils.isEmpty(article.getKeywords())) {
+                article.setKeywords(Arrays.asList(article.getCategory()));
+            }
             String jsonStr = null;
             try {
                 jsonStr = objectMapper.writeValueAsString(article);
             } catch (JsonProcessingException e) {
                 log.error("JSON序列化异常", e);
+                continue;
             }
-            restTemplate.exchange("https://e5ccbz4gbi.execute-api.ap-northeast-1.amazonaws.com/test/admin/article/{1}",
-                    HttpMethod.PUT, new HttpEntity<>(jsonStr), Void.class, article.getId());
+            log.info(jsonStr);
+            restTemplate.exchange(apiGateway, HttpMethod.PUT, new HttpEntity<>(jsonStr, httpHeaders), Void.class,
+                    article.getId());
         }
     }
 

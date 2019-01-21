@@ -34,7 +34,7 @@ public class SrBlogRedisAspect {
     @AfterReturning(value = "pointcut()",returning = "value",argNames = "value")
     public void afterReturning(JoinPoint joinPoint, Object value) {
         Method method = ((MethodSignature)joinPoint.getSignature()).getMethod();
-        log.info("Return Redis result. ["+method.getName()+"]  value="+value);
+        log.info("Return Redis result. ["+method.getName()+"]  value "+ (value==null? "not found" : "found"));
     }
     
     
