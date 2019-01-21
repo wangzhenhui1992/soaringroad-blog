@@ -49,6 +49,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -105,8 +106,10 @@ public class SrBlogConfig {
     
     /***** RestTemplate *****/
     @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
+    public RestTemplate restTemplate(HttpMessageConverters httpConverters) {
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.setMessageConverters(httpConverters.getConverters());
+        return restTemplate;
     }
 
     /***** CorsFilter *****/
