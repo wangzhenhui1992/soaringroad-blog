@@ -9,20 +9,20 @@
  *                                  |___/                          *
  * Copyright ©2017-2019 www.soaringroad.com | All rights reserved. *
  ******************************************************************/
-package com.soaringroad.blog.service;
+package com.soaringroad.blog.core.security;
+
+import org.springframework.security.core.AuthenticationException;
 
 /**
  * <pre>
- * 认证服务接口
+ * 认证异常类
  * </pre>
  * @author wangzhenhui1992
  * @since 2019/01/24
  */
-public interface SrAuthService {
+public class SrBlogAuthenticationException extends AuthenticationException {
 
-    boolean authenticate(String username, String password);
-
-    String authenticate(String jwt);
-
-    String authonrize(String username, String password);
+    public SrBlogAuthenticationException(String msg) {
+        super(msg);
+    }
 }

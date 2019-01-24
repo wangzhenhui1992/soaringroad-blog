@@ -9,20 +9,43 @@
  *                                  |___/                          *
  * Copyright ©2017-2019 www.soaringroad.com | All rights reserved. *
  ******************************************************************/
-package com.soaringroad.blog.service;
+package com.soaringroad.blog.core.security;
+
+import org.springframework.security.authentication.AbstractAuthenticationToken;
 
 /**
  * <pre>
- * 认证服务接口
+ * JWT认证Token
  * </pre>
  * @author wangzhenhui1992
  * @since 2019/01/24
  */
-public interface SrAuthService {
+public class JwtAuthenticationToken extends AbstractAuthenticationToken {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 5774193347034635923L;
+    private String credentials;
+    private SrBlogUserDetail userDetail;
+    
+    public JwtAuthenticationToken(SrBlogUserDetail  userDetail) {
+        super(null);
+        this.credentials = null;
+        this.userDetail = userDetail;
+    }
 
-    boolean authenticate(String username, String password);
+    public void setCredentials(String credentials) {
+        this.credentials = credentials;
+    }
 
-    String authenticate(String jwt);
+    @Override
+    public Object getCredentials() {
+        return credentials;
+    }
 
-    String authonrize(String username, String password);
+    @Override
+    public Object getPrincipal() {
+        return userDetail;
+    }
+    
 }

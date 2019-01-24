@@ -35,13 +35,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.soaringroad.blog.dao.SrBlogDao;
 import com.soaringroad.blog.entity.AbstractSrBlogEntity;
 import com.soaringroad.blog.entity.SrBlogEntity;
-import com.soaringroad.blog.repository.RedisRepository;
-import com.soaringroad.blog.util.SrBlogConsts;
-import com.soaringroad.blog.util.TransformUtil;
 import com.soaringroad.blog.vo.SrBlogQueryEntity;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * <pre>
+ * API服务抽象类
+ * </pre>
+ * @author wangzhenhui1992
+ * @since 2019/01/24
+ */
 @Slf4j
 public abstract class AbstractSrBlogApiService<T extends SrBlogEntity, E extends Serializable> {
 
@@ -58,9 +62,9 @@ public abstract class AbstractSrBlogApiService<T extends SrBlogEntity, E extends
         if (!checkGet(id)) {
             return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
         }
-        log.info("GET:" + id);
+        //log.info("GET:" + id);
         SrBlogEntity entity = callGet(id);
-        log.info("GET返回:" + entity);
+        // log.info("GET返回:" + entity);
         return entity == null ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
                 : new ResponseEntity<>(entity, HttpStatus.OK);
     }
@@ -72,7 +76,7 @@ public abstract class AbstractSrBlogApiService<T extends SrBlogEntity, E extends
         if (!checkSearch(queryEntity)) {
             return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
         }
-        log.info("SEARCH:" + queryEntity);
+        //log.info("SEARCH:" + queryEntity);
         Iterable<? extends SrBlogEntity> result = callSearch(queryEntity);
         Iterator<? extends SrBlogEntity> iterator = result.iterator();
         if (!iterator.hasNext()) {
@@ -84,7 +88,7 @@ public abstract class AbstractSrBlogApiService<T extends SrBlogEntity, E extends
         while (iterator.hasNext()) {
             resultList.add(iterator.next());
         }
-        log.info("SEARCH返回:" + resultList);
+        //log.info("SEARCH返回:" + resultList);
         return new ResponseEntity<>(resultList, HttpStatus.OK);
     }
 
@@ -105,9 +109,9 @@ public abstract class AbstractSrBlogApiService<T extends SrBlogEntity, E extends
         if (!checkPost(entity)) {
             return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
         }
-        log.info("POST:" + entity);
+        //log.info("POST:" + entity);
         SrBlogEntity result = callPost(entity);
-        log.info("POST返回:" + result);
+        //log.info("POST返回:" + result);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
@@ -117,9 +121,9 @@ public abstract class AbstractSrBlogApiService<T extends SrBlogEntity, E extends
         if (!checkPut(entity)) {
             return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
         }
-        log.info("PUT:" + entity);
+        //log.info("PUT:" + entity);
         SrBlogEntity result = callPut(entity);
-        log.info("PUT返回:" + result);
+        //log.info("PUT返回:" + result);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
@@ -129,10 +133,10 @@ public abstract class AbstractSrBlogApiService<T extends SrBlogEntity, E extends
         if (!checkDelete(entity)) {
             return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
         }
-        log.info("DELETE:" + entity);
+        //log.info("DELETE:" + entity);
         // TODO 通过ID去获取Entity，然后再删除
         callDelete(entity);
-        log.info("DELETE返回:" + entity);
+        //log.info("DELETE返回:" + entity);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
