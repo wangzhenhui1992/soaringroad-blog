@@ -1,3 +1,14 @@
+/******************************************************************
+ *   _____                  _             _____                 _  *
+ *  / ____|                (_)           |  __ \               | | *
+ * | (___   ___   __ _ _ __ _ _ __   __ _| |__) |___   __ _  __| | *
+ *  \___ \ / _ \ / _` | '__| | '_ \ / _` |  _  // _ \ / _` |/ _` | *
+ *  ____) | (_) | (_| | |  | | | | | (_| | | \ \ (_) | (_| | (_| | *
+ * |_____/ \___/ \__,_|_|  |_|_| |_|\__, |_|  \_\___/ \__,_|\__,_| *
+ *                                   __/ |                         *
+ *                                  |___/                          *
+ * Copyright ©2017-2018 www.soaringroad.com | All rights reserved. *
+ ******************************************************************/
 package com.soaringroad.blog.core;
 
 import java.io.IOException;
@@ -16,12 +27,19 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.soaringroad.blog.repository.RedisRepository;
-import com.soaringroad.blog.service.SrAuthService;
 import com.soaringroad.blog.util.HttpUtil;
 import com.soaringroad.blog.util.SrBlogConsts;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 
+ * <pre>
+ * 过滤器
+ * </pre>
+ * @author wangzhenhui1992
+ * @since 
+ */
 @Component
 @Slf4j
 public class SrBlogFilter implements Filter {
@@ -31,9 +49,6 @@ public class SrBlogFilter implements Filter {
 
     @Value("${app.auth}")
     private boolean auth;
-
-    @Autowired
-    private SrAuthService authService;
     
     @Autowired
     private RedisRepository redisRepository;
@@ -65,20 +80,9 @@ public class SrBlogFilter implements Filter {
             return;
         }
         
-        // 流量统计
 		countView(realIp);
         
-        // 允许跨域
         allowCros(httpResponse);
-
-        // API认证
-        if (!auth(httpRequest)) {
-            
-            httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-            
-//            request.getRequestDispatcher("/login").forward(request, httpResponse);
-            return;
-        }
 
         // 处理请求，API对象和静态资源以外的请求转发到Angular前端
         if (HttpUtil.isNotApi(uri)) {
@@ -103,24 +107,24 @@ public class SrBlogFilter implements Filter {
         httpResponse.setHeader("Access-Control-Allow-Methods", "*");
     }
 
-    private boolean auth(HttpServletRequest request) {
-
-        if (!auth) {
-            return true;
-        }
-
-        String uri = request.getRequestURI();
-        // 管理功能API以外的请求可以通过
-        if (!uri.startsWith("/api/admin") || uri.equals("/api/admin/login") || uri.startsWith("/api/admin/druid") || uri.startsWith("/druid") ) {
-            return true;
-        }
-        String srToken = request.getHeader("Authorization");
-        log.info(srToken);
-        if (srToken == null || srToken.isEmpty()) {
-            return false;
-        }
-        return authService.auth(srToken);
-    }
+//    private boolean auth(HttpServletRequest request) {
+//
+//        if (!auth) {
+//            return true;
+//        }
+//
+//        String uri = request.getRequestURI();
+//        // 管理功能API以外的请求可以通过
+//        if (!uri.startsWith("/api/admin") || uri.equals("/api/admin/login") || uri.startsWith("/api/admin/druid") || uri.startsWith("/druid") ) {
+//            return true;
+//        }
+//        String srToken = request.getHeader("Authorization");
+//        log.info(srToken);
+//        if (srToken == null || srToken.isEmpty()) {
+//            return false;
+//        }
+//        return authService.auth(srToken);
+//    }
     
     private void countView(String realIp) {
     	String redisKey = String.format(SrBlogConsts.REDIS_KEY_VIEW_IP, realIp);
