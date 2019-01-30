@@ -3,6 +3,7 @@ package com.soaringroad.blog.dao;
 import java.io.Serializable;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 
 import com.soaringroad.blog.entity.SrBlogEntity;
@@ -13,6 +14,9 @@ import com.soaringroad.blog.vo.SrBlogQueryEntity;
 
 public abstract class AbstractSrBlogDao<A extends SrBlogEntity, I extends Serializable> implements SrBlogDao<A, I> {
 
+    @Autowired
+    private SrBlogH2Repository<A, I> repository;
+    
     /**
      * {@inheritDoc}
      */
@@ -22,7 +26,7 @@ public abstract class AbstractSrBlogDao<A extends SrBlogEntity, I extends Serial
     }
 
     private Optional<A> getByIdH2(I id) {
-        return getH2Repository().findById(id);
+        return repository.findById(id);
     }
 
     /**
@@ -35,7 +39,7 @@ public abstract class AbstractSrBlogDao<A extends SrBlogEntity, I extends Serial
 
     public Page<A> searchH2(SrBlogQueryEntity queryEntity) {
         SrBlogH2Query<A> searchQuery = new SrBlogH2QueryBuilder<A>(queryEntity).build();
-        return getH2Repository().findAll(searchQuery.getSpecification(), searchQuery.getPageRequest());
+        return repository.findAll(searchQuery.getSpecification(), searchQuery.getPageRequest());
     }
 
     /**
@@ -47,7 +51,7 @@ public abstract class AbstractSrBlogDao<A extends SrBlogEntity, I extends Serial
     }
 
     public A saveH2(A entity) {
-        return getH2Repository().save(entity);
+        return repository.save(entity);
     }
 
     /**
@@ -59,10 +63,8 @@ public abstract class AbstractSrBlogDao<A extends SrBlogEntity, I extends Serial
     }
 
     public void deleteH2(A entity) {
-        getH2Repository().delete(entity);
+        repository.delete(entity);
     }
-
-    protected abstract SrBlogH2Repository<A, I> getH2Repository();
 
     /**
      * {@inheritDoc}
@@ -81,6 +83,6 @@ public abstract class AbstractSrBlogDao<A extends SrBlogEntity, I extends Serial
     }
 
     private Long countH2() {
-        return getH2Repository().count();
+        return repository.count();
     }
 }

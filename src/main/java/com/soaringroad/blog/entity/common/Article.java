@@ -10,13 +10,14 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.TableGenerator;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.soaringroad.blog.dao.impl.ArticleDao;
 import com.soaringroad.blog.entity.AbstractSrBlogEntity;
 
 import lombok.Data;
@@ -36,7 +37,8 @@ public class Article extends AbstractSrBlogEntity{
      * 文章ID
      */
     @Id
-    @GeneratedValue()
+    @GeneratedValue(strategy = GenerationType.TABLE,generator="articleGenerator")
+    @TableGenerator(name = "articleGenerator",pkColumnValue="ARTICLE", allocationSize=1)
     private Long id;
 
     /**
@@ -95,14 +97,6 @@ public class Article extends AbstractSrBlogEntity{
     @JsonFormat(pattern="yyyy-MM-dd")
     private Date date;
     
-    /**
-     * {@inheritDoc}
-     */
-    @SuppressWarnings("unchecked")
-    @Override
-    public Class<ArticleDao> daoClass() {
-        return ArticleDao.class;
-    }
 
     @Override
     public String redisKey() {
