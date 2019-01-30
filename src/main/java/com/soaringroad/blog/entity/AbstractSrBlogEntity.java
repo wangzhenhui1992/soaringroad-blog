@@ -17,9 +17,4 @@ public abstract class AbstractSrBlogEntity implements SrBlogEntity {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@JsonIgnore
-	public <A extends SrBlogEntity, I extends Serializable, T extends AbstractSrBlogDao<A, I>> T getDao() {
-		return SrBlogContextContainer.getBean(this.daoClass());
-	}
-
 }

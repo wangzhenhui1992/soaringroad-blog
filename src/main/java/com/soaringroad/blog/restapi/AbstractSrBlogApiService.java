@@ -13,7 +13,6 @@ package com.soaringroad.blog.restapi;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -32,8 +31,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.soaringroad.blog.dao.SrBlogDao;
-import com.soaringroad.blog.entity.AbstractSrBlogEntity;
+import com.soaringroad.blog.dao.AbstractSrBlogDao;
 import com.soaringroad.blog.entity.SrBlogEntity;
 import com.soaringroad.blog.vo.SrBlogQueryEntity;
 
@@ -43,6 +41,7 @@ import lombok.extern.slf4j.Slf4j;
  * <pre>
  * API服务抽象类
  * </pre>
+ * 
  * @author wangzhenhui1992
  * @since 2019/01/24
  */
@@ -55,6 +54,9 @@ public abstract class AbstractSrBlogApiService<T extends SrBlogEntity, E extends
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private AbstractSrBlogDao<T, E> dao;
+
     @RequestMapping(value = { "/{id:(?!^(?:search|count)$).*}",
             "/{id:(?!^(?:search|count)$).*}" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SrBlogEntity> get(@PathVariable E id) {
@@ -62,7 +64,7 @@ public abstract class AbstractSrBlogApiService<T extends SrBlogEntity, E extends
         if (!checkGet(id)) {
             return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
         }
-        //log.info("GET:" + id);
+        // log.info("GET:" + id);
         SrBlogEntity entity = callGet(id);
         // log.info("GET返回:" + entity);
         return entity == null ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
@@ -76,7 +78,7 @@ public abstract class AbstractSrBlogApiService<T extends SrBlogEntity, E extends
         if (!checkSearch(queryEntity)) {
             return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
         }
-        //log.info("SEARCH:" + queryEntity);
+        // log.info("SEARCH:" + queryEntity);
         Iterable<? extends SrBlogEntity> result = callSearch(queryEntity);
         Iterator<? extends SrBlogEntity> iterator = result.iterator();
         if (!iterator.hasNext()) {
@@ -88,7 +90,7 @@ public abstract class AbstractSrBlogApiService<T extends SrBlogEntity, E extends
         while (iterator.hasNext()) {
             resultList.add(iterator.next());
         }
-        //log.info("SEARCH返回:" + resultList);
+        // log.info("SEARCH返回:" + resultList);
         return new ResponseEntity<>(resultList, HttpStatus.OK);
     }
 
@@ -109,9 +111,9 @@ public abstract class AbstractSrBlogApiService<T extends SrBlogEntity, E extends
         if (!checkPost(entity)) {
             return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
         }
-        //log.info("POST:" + entity);
+        // log.info("POST:" + entity);
         SrBlogEntity result = callPost(entity);
-        //log.info("POST返回:" + result);
+        // log.info("POST返回:" + result);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
@@ -121,76 +123,67 @@ public abstract class AbstractSrBlogApiService<T extends SrBlogEntity, E extends
         if (!checkPut(entity)) {
             return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
         }
-        //log.info("PUT:" + entity);
+        // log.info("PUT:" + entity);
         SrBlogEntity result = callPut(entity);
-        //log.info("PUT返回:" + result);
+        // log.info("PUT返回:" + result);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = { "/{id:(?!^(?:search|count)$).*}",
             "/{id:(?!^(?:search|count)$).*}" }, method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<T> delete(@RequestBody T entity) {
-        if (!checkDelete(entity)) {
-            return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
+    public ResponseEntity<T> delete(@PathVariable E id) {
+        T entity = this.dao.findById(id).orElse(null);
+        if (entity == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        //log.info("DELETE:" + entity);
+        if (!checkDelete(entity)) {
+            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+        // log.info("DELETE:" + entity);
         // TODO 通过ID去获取Entity，然后再删除
         callDelete(entity);
-        //log.info("DELETE返回:" + entity);
+        // log.info("DELETE返回:" + entity);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     protected SrBlogEntity callGet(E id) {
-        Optional<? extends SrBlogEntity> opt = getDao().findById(id);
+        Optional<? extends SrBlogEntity> opt = dao.findById(id);
         return opt.isPresent() ? opt.get() : null;
     }
 
     protected Long callCount() {
-        return getDao().count();
+        return dao.count();
     }
 
     protected Iterable<? extends SrBlogEntity> callSearch(SrBlogQueryEntity q) {
-        return getDao().search(q);
+        return dao.search(q);
     }
 
     protected SrBlogEntity callPost(T entity) {
-        return getDao(entity).create(entity);
+        return dao.create(entity);
     }
 
     protected SrBlogEntity callPut(T entity) {
-        return getDao(entity).save(entity);
+        return dao.save(entity);
     }
 
     protected void callDelete(T entity) {
-        getDao(entity).delete(entity);
+        dao.delete(entity);
     }
 
-    protected SrBlogDao<T, E> getDao(T srBlogEntity) {
-        return ((AbstractSrBlogEntity) srBlogEntity).getDao();
-    }
-
-    protected SrBlogDao<T, E> getDao() {
-        T newInstance = getInstance();
-        if (newInstance == null) {
-            return null;
-        }
-        return newInstance.getDao();
-    }
-
-    @SuppressWarnings("unchecked")
-    private T getInstance() {
-        Class<T> entityClass = (Class<T>) ParameterizedType.class.cast(this.getClass().getGenericSuperclass())
-                .getActualTypeArguments()[0];
-        T newInstance = null;
-        try {
-            newInstance = entityClass.newInstance();
-        } catch (InstantiationException e) {
-            log.error("无法生成实例. class=" + entityClass, e);
-        } catch (IllegalAccessException e) {
-            log.error("无法生成实例. class=" + entityClass, e);
-        }
-        return newInstance;
-    }
+//    private T getInstance() {
+//        Class<T> entityClass = (Class<T>) ParameterizedType.class.cast(this.getClass().getGenericSuperclass())
+//                .getActualTypeArguments()[0];
+//        T newInstance = null;
+//        try {
+//            newInstance = entityClass.newInstance();
+//        } catch (InstantiationException e) {
+//            log.error("无法生成实例. class=" + entityClass, e);
+//        } catch (IllegalAccessException e) {
+//            log.error("无法生成实例. class=" + entityClass, e);
+//        }
+//        return newInstance;
+//    }
 
     protected boolean checkGet(E id) {
         return false;

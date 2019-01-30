@@ -27,6 +27,7 @@ import com.soaringroad.blog.service.SrAuthService;
  * <pre>
  * 安全相关的构建类
  * </pre>
+ * 
  * @author wangzhenhui1992
  * @since 2019/01/24
  */
