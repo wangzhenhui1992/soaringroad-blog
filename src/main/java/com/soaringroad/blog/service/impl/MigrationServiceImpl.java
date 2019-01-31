@@ -47,20 +47,33 @@ public class MigrationServiceImpl implements MigrationService {
         Iterable<Article> itr = repository.findAll();
 
         for (Article article : itr) {
-            if (CollectionUtils.isEmpty(article.getKeywords())) {
-                article.setKeywords(Arrays.asList(article.getCategory()));
-            }
-            String jsonStr = null;
-            try {
-                jsonStr = objectMapper.writeValueAsString(article);
-            } catch (JsonProcessingException e) {
-                log.error("JSON序列化异常", e);
-                continue;
-            }
-            log.info(jsonStr);
-            restTemplate.exchange(apiGateway, HttpMethod.PUT, new HttpEntity<>(jsonStr, httpHeaders), Void.class,
-                    article.getId());
+            insertIntoDynamoDB(article);
         }
+    }
+
+    @Override
+    public void migrationArticleToDynamoDB(Long id) {
+        Article article = repository.findById(id).orElse(null);
+        if (article == null) {
+            return;
+        }
+        insertIntoDynamoDB(article);
+    }
+
+    private void insertIntoDynamoDB(Article article) {
+        if (CollectionUtils.isEmpty(article.getKeywords())) {
+            article.setKeywords(Arrays.asList(article.getCategory()));
+        }
+        String jsonStr = null;
+        try {
+            jsonStr = objectMapper.writeValueAsString(article);
+        } catch (JsonProcessingException e) {
+            log.error("JSON序列化异常", e);
+            return;
+        }
+        log.info(jsonStr);
+        restTemplate.exchange(apiGateway, HttpMethod.PUT, new HttpEntity<>(jsonStr, httpHeaders), Void.class,
+                article.getId());
     }
 
 }
