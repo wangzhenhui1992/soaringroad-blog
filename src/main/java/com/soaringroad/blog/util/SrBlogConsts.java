@@ -83,6 +83,6 @@ public final class SrBlogConsts {
     public static final String CATEGORY_URL_TEMPLATE = "https://www.soaringroad.com/category/%s";
     public static final String HOME_URL = "https://www.soaringroad.com";
     public static final String INTRODUCTION_URL = "https://www.soaringroad.com/myself";
-    public static final String BAIDU_COMMIT_URL_TEMPLATE = "https://data.zz.baidu.com/urls?site=https://www.soaringroad.com&token=%s";
+    public static final String BAIDU_COMMIT_URL_TEMPLATE = "http://data.zz.baidu.com/urls?site=https://www.soaringroad.com&token=%s";
     
 }
