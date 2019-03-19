@@ -1,7 +1,5 @@
 package com.soaringroad.blog.core;
 
-import javax.annotation.PreDestroy;
-
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;

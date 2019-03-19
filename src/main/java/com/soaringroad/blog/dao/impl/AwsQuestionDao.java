@@ -1,11 +1,10 @@
 package com.soaringroad.blog.dao.impl;
 
+import com.soaringroad.blog.dao.AbstractSrBlogDao;
+import com.soaringroad.blog.entity.common.Advertisement;
 import org.springframework.stereotype.Component;
 
-import com.soaringroad.blog.dao.AbstractSrBlogDao;
-import com.soaringroad.blog.entity.common.AwsQuestion;
-
 @Component
-public class AwsQuestionDao extends AbstractSrBlogDao<AwsQuestion, Long> {
+public class AwsQuestionDao extends AbstractSrBlogDao<Advertisement, Long> {
 
 }
