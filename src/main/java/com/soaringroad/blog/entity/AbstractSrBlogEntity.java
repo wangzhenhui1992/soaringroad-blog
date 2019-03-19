@@ -1,11 +1,5 @@
 package com.soaringroad.blog.entity;
 
-import java.io.Serializable;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.soaringroad.blog.core.SrBlogContextContainer;
-import com.soaringroad.blog.dao.AbstractSrBlogDao;
-
 /**
  * Entity接口
  * 
