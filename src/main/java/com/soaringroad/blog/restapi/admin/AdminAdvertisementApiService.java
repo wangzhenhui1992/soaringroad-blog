@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/admin/advertisment")
+@RequestMapping("/api/admin/advertisement")
 public class AdminAdvertisementApiService extends AbstractSrBlogApiService<Advertisement, Long>{
 
     @Override
