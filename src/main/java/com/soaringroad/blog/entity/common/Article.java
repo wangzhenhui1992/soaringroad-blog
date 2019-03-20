@@ -15,6 +15,8 @@ import javax.persistence.Id;
 import javax.persistence.TableGenerator;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -61,6 +63,7 @@ public class Article extends AbstractSrBlogEntity{
      * 标签
      */
     @ElementCollection(targetClass=String.class, fetch=FetchType.LAZY)
+    @LazyCollection(value=LazyCollectionOption.FALSE)
     private List<String> keywords;
 
     /**
