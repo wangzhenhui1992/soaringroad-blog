@@ -60,7 +60,7 @@ public class Article extends AbstractSrBlogEntity{
     /**
      * 标签
      */
-    @ElementCollection(targetClass=String.class, fetch=FetchType.LAZY)
+    @ElementCollection(targetClass=String.class, fetch=FetchType.EAGER)
     private List<String> keywords;
 
     /**
