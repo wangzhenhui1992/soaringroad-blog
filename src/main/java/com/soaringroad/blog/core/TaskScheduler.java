@@ -42,7 +42,7 @@ public class TaskScheduler {
 
     private static AtomicInteger counter = new AtomicInteger(0);
 
-    @Scheduled(fixedDelay = 3600000, initialDelay=6000)
+    @Scheduled(fixedDelay = 3600000, initialDelay=60000)
     public void execute() {
         log.info("定时Task启动");
         Iterable<Article> itr = srBlogDao.findAll();
