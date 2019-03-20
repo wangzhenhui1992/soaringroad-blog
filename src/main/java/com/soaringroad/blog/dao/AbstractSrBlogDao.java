@@ -85,4 +85,9 @@ public abstract class AbstractSrBlogDao<A extends SrBlogEntity, I extends Serial
     private Long countH2() {
         return repository.count();
     }
+    
+    @Override
+    public Iterable<A> findAll() {
+      return repository.findAll();
+    }
 }

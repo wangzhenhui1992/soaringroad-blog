@@ -11,23 +11,21 @@
  ******************************************************************/
 package com.soaringroad.blog.core;
 
+import com.soaringroad.blog.dao.SrBlogDao;
+import com.soaringroad.blog.entity.common.Article;
+import com.soaringroad.blog.repository.RedisRepository;
+import com.soaringroad.blog.service.NotifyBaiduService;
+import com.soaringroad.blog.util.SrBlogConsts;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
-
-import com.soaringroad.blog.entity.common.Article;
-import com.soaringroad.blog.repository.RedisRepository;
-import com.soaringroad.blog.repository.SrBlogRepository;
-import com.soaringroad.blog.service.NotifyBaiduService;
-import com.soaringroad.blog.util.SrBlogConsts;
-
-import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
@@ -37,17 +35,17 @@ public class TaskScheduler {
     private RedisRepository redisRepository;
 
     @Autowired
-    private SrBlogRepository<Article, Long> repository;
+    private SrBlogDao<Article, Long> srBlogDao;
     
     @Autowired
     private NotifyBaiduService notifyBaiduService;
 
     private static AtomicInteger counter = new AtomicInteger(0);
 
-    @Scheduled(fixedDelay = 3600000, initialDelay=60000)
+    @Scheduled(fixedDelay = 3600000, initialDelay=6000)
     public void execute() {
         log.info("定时Task启动");
-        Iterable<Article> itr = repository.findAll();
+        Iterable<Article> itr = srBlogDao.findAll();
         List<String> urls = new ArrayList<String>();
         urls.add(SrBlogConsts.HOME_URL);
         urls.add(SrBlogConsts.INTRODUCTION_URL);
@@ -74,6 +72,6 @@ public class TaskScheduler {
             return;
         }
         article.setView(Long.valueOf(obj.toString()));
-        repository.save(article);
+        srBlogDao.save(article);
     }
 }
