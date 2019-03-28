@@ -49,9 +49,7 @@ public class ArticleDao extends AbstractSrBlogDao<Article, Long> {
             Optional<Article> resultOpt = super.findById(id);
             result = resultOpt.isPresent() ? resultOpt.get() : null;
             // 添加缓存
-            if (result != null) {
-                redisRepository.setValue(String.format(SrBlogConsts.ENTITY_KEY_ARTICLE, id), result);
-            }
+            redisRepository.setValue(String.format(SrBlogConsts.ENTITY_KEY_ARTICLE, id), result);
         }
         // VIEW统计
         if (result != null) {
