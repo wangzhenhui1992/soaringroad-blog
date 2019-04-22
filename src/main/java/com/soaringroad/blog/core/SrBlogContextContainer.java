@@ -12,7 +12,7 @@ import java.util.function.Function;
 public class SrBlogContextContainer implements ApplicationContextAware {
 
     private static ApplicationContext context;
-    private static ThreadLocal<RequestContext> requestContextThreadLocal = null;
+    private static ThreadLocal<RequestContext> requestContextThreadLocal = new ThreadLocal<RequestContext>();
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         context = applicationContext;
@@ -27,17 +27,20 @@ public class SrBlogContextContainer implements ApplicationContextAware {
     }
     
     public RequestContext getRequestContext() {
-      return Optional.ofNullable(requestContextThreadLocal).map(ThreadLocal<RequestContext>::get).orElse(null);
+      return requestContextThreadLocal.get();
     }
     
     public static void setRequestContext(RequestContext requestContext)  {
-      initIfNotExist(false);
       requestContextThreadLocal.set(requestContext);
     }
     
     public static void setRequestId(String requestId) {
-      initIfNotExist(true);
-      requestContextThreadLocal.get().setRequestId(requestId);
+      RequestContext requestContext = requestContextThreadLocal.get();
+      if (requestContext == null) {
+        requestContext = new RequestContext();
+        requestContextThreadLocal.set(requestContext);
+      }
+      requestContext.setRequestId(requestId);
     }
     
     public static String getRequestId() {
@@ -46,27 +49,20 @@ public class SrBlogContextContainer implements ApplicationContextAware {
     
     
     public static void setSecurityKey(String securityKey) {
-      initIfNotExist(true);
-      requestContextThreadLocal.get().setSecurityKey(securityKey);
+      RequestContext requestContext = requestContextThreadLocal.get();
+      if (requestContext == null) {
+        requestContext = new RequestContext();
+        requestContextThreadLocal.set(requestContext);
+      }
+      requestContext.setSecurityKey(securityKey);
     }
     
     public static String getSecurityKey() {
       return getRequestContextPropertyOptional(RequestContext::getSecurityKey);
     }
     
-    private static void initIfNotExist(boolean initContext) {
-      if (requestContextThreadLocal != null) {
-        return;
-      }
-      requestContextThreadLocal = new  ThreadLocal<RequestContext>();
-      if (!initContext) {
-        return;
-      }
-      requestContextThreadLocal.set(new RequestContext());
-    }
-    
     private static <T,U> U getRequestContextPropertyOptional(Function<RequestContext, U> mapper) {
-      return Optional.ofNullable(requestContextThreadLocal).map(ThreadLocal<RequestContext>::get).map(mapper).orElse(null);
+      return Optional.ofNullable(requestContextThreadLocal.get()).map(mapper).orElse(null);
     }
 
 }
