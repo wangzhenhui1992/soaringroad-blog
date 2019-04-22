@@ -85,4 +85,9 @@ public final class SrBlogConsts {
     public static final String INTRODUCTION_URL = "https://www.soaringroad.com/myself";
     public static final String BAIDU_COMMIT_URL_TEMPLATE = "http://data.zz.baidu.com/urls?site=https://www.soaringroad.com&token=%s";
     
+    //------------------------------------------------------------------//
+    // REQUEST ID
+    //-------------------------------------------------------------------//
+    public static final String REQUEST_ID = "REQUEST_ID";
+    
 }
