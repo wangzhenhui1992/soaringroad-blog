@@ -1,7 +1,11 @@
 package com.soaringroad.blog.core;
 
 import java.util.LinkedHashMap;
-
+/**
+ * LRU缓存
+ * 
+ * @author wangzhenhui1992
+ */
 public class LRUCache<V> extends LinkedHashMap<Long, LRUTimedValue<V>> {
 
     /**
