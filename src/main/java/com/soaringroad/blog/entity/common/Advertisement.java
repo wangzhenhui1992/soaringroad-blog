@@ -26,7 +26,7 @@ public class Advertisement extends AbstractSrBlogEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.TABLE,generator="adsGenerator")
   @TableGenerator(name = "adsGenerator",pkColumnValue="ADS", allocationSize=1)
-  private int adsNo;
+  private long adsNo;
   private String image;
   private String url;
   private String text;
