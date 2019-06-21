@@ -13,7 +13,7 @@ package com.soaringroad.blog.core;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.handler.codec.http.HttpHeaderNames;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,47 +28,43 @@ import org.springframework.web.servlet.DispatcherServlet;
 @EnableScheduling
 public class CoreConfig {
 
-    @Value("${app.allowcros}")
-    private boolean allowCors;
+  /***** DispatcherServlet *****/
+  @Bean
+  public DispatcherServlet dispatcherServlet() {
+    return new SrBlogDispatcherServlet();
+  }
 
-    /***** DispatcherServlet *****/
-    @Bean
-    public DispatcherServlet dispatcherServlet() {
-        return new SrBlogDispatcherServlet();
-    }
+  /***** ObjectMapper *****/
+  @Bean
+  public ObjectMapper objectMapper() {
+    return new ObjectMapper();
+  }
 
-    /***** ObjectMapper *****/
-    @Bean
-    public ObjectMapper objectMapper() {
-        return new ObjectMapper();
-    }
-    
-    /***** RestTemplate *****/
-    @Bean
-    public RestTemplate restTemplate(HttpMessageConverters httpConverters) {
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.setMessageConverters(httpConverters.getConverters());
-        return restTemplate;
-    }
+  /***** RestTemplate *****/
+  @Bean
+  public RestTemplate restTemplate(HttpMessageConverters httpConverters) {
+    RestTemplate restTemplate = new RestTemplate();
+    restTemplate.setMessageConverters(httpConverters.getConverters());
+    return restTemplate;
+  }
 
-    /***** CorsFilter *****/
-    @Bean()
-    public CorsFilter corsFilter() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", buildConfig());
-        return new CorsFilter(source);
-    }
+  /***** CorsFilter *****/
+  @Bean()
+  @ConditionalOnProperty(name="app.allowcros", havingValue="true")
+  public CorsFilter corsFilter() {
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", buildConfig());
+    return new CorsFilter(source);
+  }
 
-    private CorsConfiguration buildConfig() {
-        CorsConfiguration corsConfiguration = new CorsConfiguration();
-        if (allowCors) {
-            corsConfiguration.addAllowedOrigin(CorsConfiguration.ALL);
-            corsConfiguration.addAllowedHeader(CorsConfiguration.ALL);
-            corsConfiguration.addAllowedHeader(HttpHeaderNames.AUTHORIZATION.toString());
-            corsConfiguration.addAllowedMethod(CorsConfiguration.ALL);
-            corsConfiguration.addExposedHeader(HttpHeaderNames.AUTHORIZATION.toString());
-        }
-        return corsConfiguration;
-    }
-    
+  private CorsConfiguration buildConfig() {
+    CorsConfiguration corsConfiguration = new CorsConfiguration();
+    corsConfiguration.addAllowedOrigin(CorsConfiguration.ALL);
+    corsConfiguration.addAllowedHeader(CorsConfiguration.ALL);
+    corsConfiguration.addAllowedHeader(HttpHeaderNames.AUTHORIZATION.toString());
+    corsConfiguration.addAllowedMethod(CorsConfiguration.ALL);
+    corsConfiguration.addExposedHeader(HttpHeaderNames.AUTHORIZATION.toString());
+    return corsConfiguration;
+  }
+
 }
