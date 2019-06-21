@@ -22,7 +22,10 @@ import org.springframework.security.core.AuthenticationException;
  */
 public class SrBlogAuthenticationException extends AuthenticationException {
 
-    public SrBlogAuthenticationException(String msg) {
-        super(msg);
-    }
+  /**  */
+  private static final long serialVersionUID = 1L;
+
+  public SrBlogAuthenticationException(String msg) {
+    super(msg);
+  }
 }

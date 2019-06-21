@@ -8,4 +8,5 @@ public class SrBlogQueryEntity {
 	SrBlogQuerySort[] querySort;
 	Integer queryNumber;
 	Integer pageNumber;
+	String entityName;
 }

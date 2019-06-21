@@ -1,32 +1,28 @@
 package com.soaringroad.blog.service.impl;
 
-import java.util.HashSet;
-import java.util.Set;
-
+import com.soaringroad.blog.common.DataManager;
+import com.soaringroad.blog.entity.Article;
+import com.soaringroad.blog.service.SiteMapService;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.soaringroad.blog.entity.common.Article;
-import com.soaringroad.blog.repository.h2.ArticleH2Repository;
-import com.soaringroad.blog.service.SiteMapService;
+import java.util.HashSet;
+import java.util.Set;
 
 @Component
 public class SiteMapServiceImpl implements SiteMapService {
 
     @Autowired
-    private ArticleH2Repository articleRepo;
+    private DataManager<Article,Long> articleManager;
 
     @Override
     public Document generateSiteMap() {
-        Iterable<Article> itr = articleRepo.findAll();
+        Iterable<Article> itr = articleManager.findAll();
         Document doc = DocumentHelper.createDocument();
         Element root = doc.addElement("urlset", "https://www.sitemaps.org/schemas/sitemap/0.9");
-//        root.addAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-//        root.addAttribute("xsi:schemaLocation",
-//                "http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd");
         Element host = root.addElement("url");
         host.addElement("loc").setText("https://www.soaringroad.com");
         host.addElement("changefreq").setText("daily");

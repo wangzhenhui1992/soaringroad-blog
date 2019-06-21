@@ -11,4 +11,17 @@ import lombok.Data;
 public class LRUTimedValue<V> {
   private long createdTime;
   private V value;
+  public long getCreatedTime() {
+    return createdTime;
+  }
+  public void setCreatedTime(long createdTime) {
+    this.createdTime = createdTime;
+  }
+  public V getValue() {
+    return value;
+  }
+  public void setValue(V value) {
+    this.value = value;
+  }
+  
 }

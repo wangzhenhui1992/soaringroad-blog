@@ -20,8 +20,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.web.filter.CorsFilter;
 
-import com.soaringroad.blog.core.SrBlogConfig;
-import com.soaringroad.blog.service.SrAuthService;
+import com.soaringroad.blog.core.CoreConfig;
+import com.soaringroad.blog.service.AuthService;
 
 /**
  * <pre>
@@ -32,11 +32,11 @@ import com.soaringroad.blog.service.SrAuthService;
  * @since 2019/01/24
  */
 @EnableWebSecurity
-@AutoConfigureAfter(SrBlogConfig.class)
+@AutoConfigureAfter(CoreConfig.class)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private SrAuthService srAuthService;
+    private AuthService srAuthService;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {

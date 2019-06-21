@@ -1,10 +1,9 @@
 package com.soaringroad.blog.core;
 
-import com.alibaba.druid.util.StringUtils;
 import com.soaringroad.blog.util.SrBlogConsts;
 import org.slf4j.MDC;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -26,8 +25,6 @@ public class SrBlogOncePerRequestFilter extends OncePerRequestFilter {
       requestId = UUID.randomUUID().toString();
     }
     MDC.put(SrBlogConsts.REQUEST_ID, requestId);
-    SrBlogContextContainer.setRequestId(requestId);
-    SrBlogContextContainer.setSecurityKey(request.getHeader(HttpHeaders.AUTHORIZATION));
     filterChain.doFilter(request, response);
   }
 

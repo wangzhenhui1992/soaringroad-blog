@@ -1,11 +1,12 @@
 package com.soaringroad.blog.entity;
 
+import com.soaringroad.blog.common.AbstractCommonEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
-public class AuthParam extends AbstractSrBlogCommonEntity {
+public class AuthParam extends AbstractCommonEntity {
 	
 	/**
 	 * serialVersionUID
@@ -21,10 +22,5 @@ public class AuthParam extends AbstractSrBlogCommonEntity {
 	 * 密码
 	 */
 	private String password;
-
-	@Override
-	public String redisKey() {
-		return null;
-	}
 
 }

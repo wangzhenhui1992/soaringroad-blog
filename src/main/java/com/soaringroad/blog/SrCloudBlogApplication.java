@@ -3,6 +3,8 @@ package com.soaringroad.blog;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchRepositoriesAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration;
 import org.springframework.cache.annotation.EnableCaching;
@@ -14,15 +16,19 @@ import org.springframework.cache.annotation.EnableCaching;
  */
 @SpringBootApplication(scanBasePackages = { "com.soaringroad.blog" })
 @EnableCaching
-@EnableAutoConfiguration(exclude = { RedisAutoConfiguration.class, RedisRepositoriesAutoConfiguration.class })
+@EnableAutoConfiguration(exclude = {
+    RedisAutoConfiguration.class,
+    RedisRepositoriesAutoConfiguration.class,
+    ElasticsearchAutoConfiguration.class,
+    ElasticsearchRepositoriesAutoConfiguration.class })
 public class SrCloudBlogApplication {
 
-    /**
-     * Main方法
-     * 
-     * @param args 参数
-     */
-    public static void main(String[] args) {
-        SpringApplication.run(SrCloudBlogApplication.class, args);
-    }
+  /**
+   * Main方法
+   * 
+   * @param args 参数
+   */
+  public static void main(String[] args) {
+    SpringApplication.run(SrCloudBlogApplication.class, args);
+  }
 }

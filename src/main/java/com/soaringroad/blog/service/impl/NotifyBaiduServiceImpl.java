@@ -11,9 +11,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-
-import com.soaringroad.blog.entity.common.Article;
-import com.soaringroad.blog.repository.SrBlogRepository;
+import com.soaringroad.blog.common.RdbRepository;
+import com.soaringroad.blog.entity.Article;
 import com.soaringroad.blog.service.NotifyBaiduService;
 import com.soaringroad.blog.util.SrBlogConsts;
 import com.soaringroad.blog.vo.BaiduCommitResponse;
@@ -30,7 +29,7 @@ public class NotifyBaiduServiceImpl implements NotifyBaiduService {
     private String baiduCommitToken;
     
     @Autowired
-    private SrBlogRepository<Article, Long> repository;
+    private RdbRepository<Article, Long> repository;
 
     @Override
     public BaiduCommitResponse notifyBaidu(List<String> urls, Set<String> categories, Set<String> labels) {

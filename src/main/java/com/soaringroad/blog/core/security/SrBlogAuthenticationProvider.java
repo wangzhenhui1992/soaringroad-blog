@@ -15,7 +15,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 
-import com.soaringroad.blog.service.SrAuthService;
+import com.soaringroad.blog.service.AuthService;
 
 /**
  * <pre>
@@ -26,9 +26,9 @@ import com.soaringroad.blog.service.SrAuthService;
  */
 public class SrBlogAuthenticationProvider implements AuthenticationProvider {
 
-    private SrAuthService srAuthService;
+    private AuthService srAuthService;
 
-    public SrBlogAuthenticationProvider(SrAuthService srAuthService) {
+    public SrBlogAuthenticationProvider(AuthService srAuthService) {
         this.srAuthService = srAuthService;
     }
 

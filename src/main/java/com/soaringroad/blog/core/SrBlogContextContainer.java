@@ -64,5 +64,9 @@ public class SrBlogContextContainer implements ApplicationContextAware {
     private static <T,U> U getRequestContextPropertyOptional(Function<RequestContext, U> mapper) {
       return Optional.ofNullable(requestContextThreadLocal.get()).map(mapper).orElse(null);
     }
+    
+    public static void clearRequestContext() {
+      requestContextThreadLocal.remove();
+    }
 
 }

@@ -12,7 +12,7 @@ public final class SrBlogConsts {
     /**
      * Entity : 文章
      */
-    public static final String ENTITY_KEY_ARTICLE = "article:%s";
+    public static final String ENTITY_KEY = "%s:%s";
 
     //------------------------------------------------------------------//
     // Redis 
