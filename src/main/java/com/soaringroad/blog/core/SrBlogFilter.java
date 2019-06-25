@@ -11,7 +11,7 @@
  ******************************************************************/
 package com.soaringroad.blog.core;
 
-import com.soaringroad.blog.service.CountService;
+import com.soaringroad.blog.service.CountCacheService;
 import com.soaringroad.blog.util.HttpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +49,7 @@ public class SrBlogFilter implements Filter {
     private boolean auth;
     
     @Autowired
-    private CountService countService;
+    private CountCacheService countService;
     
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -81,7 +81,7 @@ public class SrBlogFilter implements Filter {
             chain.doFilter(request, response);
             return;
         }
-        countService.countView(realIp);
+        countService.increaseViewByIp(realIp);
         chain.doFilter(request, response);
     }
 

@@ -23,8 +23,8 @@ public class AwsQuestion extends AbstractEntity {
      */
     private static final long serialVersionUID = 2399262431827670838L;
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE,generator="awsQuestionGenerator")
-    @TableGenerator(name = "awsQuestionGenerator",pkColumnValue="AWS_QUESTION", allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.TABLE,generator="idGenerator")
+    @TableGenerator(name = "idGenerator",pkColumnValue="AWS_QUESTION", allocationSize=1)
     private Long id;
     @Column(length = 10000,columnDefinition="TEXT")
     private String question;

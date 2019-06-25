@@ -38,8 +38,8 @@ public class Setting extends AbstractEntity {
   public static final String ENTITY_NAME = "setting";
   
   @Id
-  @GeneratedValue(strategy = GenerationType.TABLE,generator="settingGenerator")
-  @TableGenerator(name = "settingGenerator",pkColumnValue="SETTING", allocationSize=1)
+  @GeneratedValue(strategy = GenerationType.TABLE,generator="idGenerator")
+  @TableGenerator(name = "idGenerator",pkColumnValue="SETTING", allocationSize=1)
   private Long id;
   
   private String name;

@@ -74,6 +74,6 @@ public class Scheduler {
             return;
         }
         article.setView(Long.valueOf(obj.toString()));
-        articleDataManager.save(article);
+//        articleDataManager.save(article);
     }
 }

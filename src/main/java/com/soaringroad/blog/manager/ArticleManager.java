@@ -13,7 +13,26 @@ package com.soaringroad.blog.manager;
 
 import com.soaringroad.blog.common.AbstractDataManager;
 import com.soaringroad.blog.entity.Article;
+import com.soaringroad.blog.util.EntityUtil;
+import com.soaringroad.blog.vo.SrBlogQueryEntity;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ArticleManager extends AbstractDataManager<Article, Long> {}
+public class ArticleManager extends AbstractDataManager<Article, Long> {
+  
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Page<Article> search(SrBlogQueryEntity queryEntity) {
+    return super.search(queryEntity).map(article->{
+      Object obj = this.cacheRepository.getValue(EntityUtil.getCacheKey(article));
+      if (obj != null) {
+        article.setView(Long.valueOf(String.valueOf(obj)));
+      }
+      return article;
+    });
+  }
+  
+}

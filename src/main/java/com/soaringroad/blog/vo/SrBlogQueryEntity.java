@@ -6,6 +6,7 @@ import lombok.Data;
 public class SrBlogQueryEntity {
 	SrBlogQueryCondition[] queryConditions;
 	SrBlogQuerySort[] querySort;
+	String[] fetchSource;
 	Integer queryNumber;
 	Integer pageNumber;
 	String entityName;

@@ -78,7 +78,9 @@ public class SyncServiceImpl implements SyncService {
   private boolean toDb(String entityName) {
     RdbRepository<? extends AbstractEntity,? extends Serializable> rdbRepository = RepositoryFactory.getRdbRepository(entityName);
     ElasticSearchRepository<? extends AbstractEntity,? extends Serializable> esRepository =  RepositoryFactory.getEsRepository(entityName);
-    esRepository.findAll().forEach(rdbRepository::saveObject);
+    esRepository.findAll().stream().sorted((o1,o2)-> {
+      return o1.getEntityId()-o2.getEntityId() >= 0?1:-1 ;
+    }).forEach(rdbRepository::saveObject);
     return true;
   }
 

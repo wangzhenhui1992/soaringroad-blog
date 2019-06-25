@@ -26,8 +26,8 @@ public class Advertisement extends AbstractEntity {
    * 文章ID
    */
   @Id
-  @GeneratedValue(strategy = GenerationType.TABLE,generator="adsGenerator")
-  @TableGenerator(name = "adsGenerator",pkColumnValue="ADS", allocationSize=1)
+  @GeneratedValue(strategy = GenerationType.TABLE,generator="idGenerator")
+  @TableGenerator(name = "idGenerator",pkColumnValue="ADS", allocationSize=1)
   private long adsNo;
   private String image;
   private String url;

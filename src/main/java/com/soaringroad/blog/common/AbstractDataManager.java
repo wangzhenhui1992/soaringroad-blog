@@ -19,13 +19,13 @@ import java.util.Optional;
 public abstract class AbstractDataManager<A extends AbstractEntity, I extends Serializable> implements DataManager<A, I> , InitializingBean {
 
   @Autowired
-  private RdbRepository<A, I> rdbRepository;
+  protected RdbRepository<A, I> rdbRepository;
 
   @Autowired(required = false)
-  private ElasticSearchRepository<A, I> esRepository;
+  protected ElasticSearchRepository<A, I> esRepository;
 
   @Autowired
-  private CacheRepository cacheRepository;
+  protected CacheRepository cacheRepository;
 
   /**
    * {@inheritDoc}
@@ -55,7 +55,7 @@ public abstract class AbstractDataManager<A extends AbstractEntity, I extends Se
    */
   @Override
   public Page<A> search(SrBlogQueryEntity queryEntity) {
-    return  Optional.of(searchEs(queryEntity)).orElse(searchRdb(queryEntity));
+    return  Optional.ofNullable(searchEs(queryEntity)).orElse(searchRdb(queryEntity));
   }
 
   private Page<A> searchEs(SrBlogQueryEntity queryEntity) {

@@ -12,7 +12,10 @@
 package com.soaringroad.blog.service.impl;
 
 import com.soaringroad.blog.common.CacheRepository;
-import com.soaringroad.blog.service.CountService;
+import com.soaringroad.blog.entity.Article;
+import com.soaringroad.blog.repository.rdb.ArticleRdbRepository;
+import com.soaringroad.blog.service.CountCacheService;
+import com.soaringroad.blog.util.EntityUtil;
 import com.soaringroad.blog.util.SrBlogConsts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,7 +26,7 @@ import org.springframework.stereotype.Component;
  * </pre>
  */
 @Component
-public class CountServiceImpl implements CountService {
+public class CountCacheServiceImpl implements CountCacheService {
   
   @Autowired
   private CacheRepository cacheRepository;
@@ -33,8 +36,18 @@ public class CountServiceImpl implements CountService {
    * {@inheritDoc}
    */
   @Override
-  public void countArticle(Long id) {
-    cacheRepository.increaseValue(String.format(SrBlogConsts.REDIS_KEY_ARTICLE_VIEW_COUNT, id), 1);
+  public Long getArticleView(Long id) {
+    Object obj = this.cacheRepository.getValue(String.format(SrBlogConsts.REDIS_KEY_ARTICLE_VIEW_COUNT, Article.ENTITY_NAME, id));
+    return obj == null ? null : Long.valueOf(obj.toString());
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Long getSiteView() {
+    Object obj = this.cacheRepository.getValue(SrBlogConsts.REDIS_KEY_VIEW_COUNT);
+    return obj == null ? null : Long.valueOf(obj.toString());
   }
 
 
@@ -42,16 +55,8 @@ public class CountServiceImpl implements CountService {
    * {@inheritDoc}
    */
   @Override
-  public Long getArticleCount(Long id) {
-    return null;
-  }
+  public void increaseViewByIp(String ip) {
 
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void countView(String ip) {
     String redisKey = String.format(SrBlogConsts.REDIS_KEY_VIEW_IP, ip);
     Object obj = cacheRepository.getValue(redisKey);
     if (obj != null) {
@@ -60,6 +65,7 @@ public class CountServiceImpl implements CountService {
     cacheRepository.increaseValue(SrBlogConsts.REDIS_KEY_VIEW_COUNT, 1);
     cacheRepository.setValue(redisKey, 1);
     cacheRepository.expire(redisKey, 300);
+    
   }
 
 
@@ -67,8 +73,8 @@ public class CountServiceImpl implements CountService {
    * {@inheritDoc}
    */
   @Override
-  public Long getCount() {
-    return null;
+  public void increaseArticleView(Long id) {
+    cacheRepository.increaseValue(String.format(SrBlogConsts.REDIS_KEY_ARTICLE_VIEW_COUNT, id), 1);    
   }
 
   

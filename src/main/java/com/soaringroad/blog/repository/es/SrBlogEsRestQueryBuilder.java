@@ -35,7 +35,7 @@ public class SrBlogEsRestQueryBuilder implements SrBlogQueryBuilder {
         buildSort(sourceBuilder);
         buildPage(sourceBuilder);
         sourceBuilder.query(boolQueryBuilder);
-        sourceBuilder.fetchSource(new String[] { "id", "category", "title", "summary", "image", "date" }, null);
+        sourceBuilder.fetchSource(queryEntity.getFetchSource(), null);
         return sourceBuilder;
     }
 

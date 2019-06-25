@@ -197,6 +197,7 @@ public abstract class AbstractElasticSearchRepository<T extends AbstractEntity, 
   public List<T> findAll() {
     SrBlogQueryEntity queryEntity = new SrBlogQueryEntity();
     queryEntity.setEntityName(this.newEntity().getEntityName());
+    queryEntity.setQueryNumber(10000);
     return search(queryEntity);
   }
 

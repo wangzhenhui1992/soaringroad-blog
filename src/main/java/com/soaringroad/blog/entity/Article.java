@@ -37,8 +37,8 @@ public class Article extends AbstractEntity{
      * 文章ID
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE,generator="articleGenerator")
-    @TableGenerator(name = "articleGenerator",pkColumnValue="ARTICLE", allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.TABLE,generator="idGenerator")
+    @TableGenerator(name = "idGenerator",pkColumnValue="ARTICLE", allocationSize=1)
     private Long id;
 
     /**

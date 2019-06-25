@@ -16,10 +16,10 @@ package com.soaringroad.blog.service;
  * 
  * </pre>
  */
-public interface CountService {
+public interface CountCacheService {
 
-    void countView(String ip);
-    void countArticle(Long id);
-    Long getCount();
-    Long getArticleCount(Long id);
+    void increaseViewByIp(String ip);
+    void increaseArticleView(Long id);
+    Long getSiteView();
+    Long getArticleView(Long id);
 }
