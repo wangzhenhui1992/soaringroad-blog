@@ -30,6 +30,7 @@ public class ViewApi {
     @Autowired
     private DataManager<Article,Long> articleManager;
     
+    @Autowired
     private CountCacheService countService;
     
     @RequestMapping(value = { "/viewcount",
