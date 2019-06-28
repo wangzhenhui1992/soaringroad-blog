@@ -32,7 +32,15 @@ public abstract class AbstractDataManager<A extends AbstractEntity, I extends Se
    */
   @Override
   public A findById(I id) {
-    return Optional.ofNullable( getByIdCache(id)).orElse(Optional.ofNullable(getByIdEs(id)).orElse( getByIdRdb(id)));
+    A data = getByIdCache(id);
+    if (data != null) {
+      return data;
+    }
+    data = Optional.ofNullable(getByIdEs(id)).orElse(getByIdRdb(id));
+    if (data != null) {
+      cacheRepository.setValue(String.format(SrBlogConsts.ENTITY_KEY, rdbRepository.newEntity().getEntityName(), id), data);
+    }
+    return data;
   }
 
   private A getByIdRdb(I id) {
