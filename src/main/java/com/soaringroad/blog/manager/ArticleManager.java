@@ -13,7 +13,7 @@ package com.soaringroad.blog.manager;
 
 import com.soaringroad.blog.common.AbstractDataManager;
 import com.soaringroad.blog.entity.Article;
-import com.soaringroad.blog.util.EntityUtil;
+import com.soaringroad.blog.util.SrBlogConsts;
 import com.soaringroad.blog.vo.SrBlogQueryEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
@@ -27,7 +27,7 @@ public class ArticleManager extends AbstractDataManager<Article, Long> {
   @Override
   public Page<Article> search(SrBlogQueryEntity queryEntity) {
     return super.search(queryEntity).map(article->{
-      Object obj = this.cacheRepository.getValue(EntityUtil.getCacheKey(article));
+      Object obj = this.cacheRepository.getValue(String.format(SrBlogConsts.REDIS_KEY_ARTICLE_VIEW_COUNT,article.getId()));
       if (obj != null) {
         article.setView(Long.valueOf(String.valueOf(obj)));
       }

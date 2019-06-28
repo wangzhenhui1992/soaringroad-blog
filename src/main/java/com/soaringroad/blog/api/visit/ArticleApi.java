@@ -11,15 +11,21 @@
 ******************************************************************/
 package com.soaringroad.blog.api.visit;
 
+import com.soaringroad.blog.common.AbstractRestApiService;
+import com.soaringroad.blog.common.EntityObject;
+import com.soaringroad.blog.entity.Article;
+import com.soaringroad.blog.service.CountCacheService;
+import com.soaringroad.blog.vo.SrBlogQueryEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.soaringroad.blog.common.AbstractRestApiService;
-import com.soaringroad.blog.entity.Article;
-import com.soaringroad.blog.vo.SrBlogQueryEntity;
 
 @RestController
 @RequestMapping("/api/article")
 public class ArticleApi extends AbstractRestApiService<Article, Long> {
+  
+  @Autowired
+  private CountCacheService countCacheService;
 
     /**
      * {@inheritDoc}
@@ -43,6 +49,15 @@ public class ArticleApi extends AbstractRestApiService<Article, Long> {
     @Override
     protected boolean checkCount() {
         return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected EntityObject callGet(Long id) {
+      countCacheService.increaseArticleView(id);
+      return super.callGet(id);
     }
 
 }
