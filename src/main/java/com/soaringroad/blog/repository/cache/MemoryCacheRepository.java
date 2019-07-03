@@ -38,7 +38,7 @@ public class MemoryCacheRepository implements CacheRepository {
     if (timedValue == null) {
       return null;
     }
-    if (timedValue.getExpireTime() == -1
+    if (timedValue.getExpireDuration() == -1
         || System.currentTimeMillis() < timedValue.getExpireTime() + timedValue.getExpireDuration()) {
       return timedValue.getValue();
     }
