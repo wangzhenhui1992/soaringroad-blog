@@ -48,7 +48,7 @@ public abstract class AbstractDataManager<A extends AbstractEntity, I extends Se
   }
 
   private A getByIdEs(I id) {
-    return esRepository.get(id);
+    return Optional.ofNullable(esRepository).map(esRepository->esRepository.get(id)).orElse(null);
   }
 
   @SuppressWarnings("unchecked")
@@ -125,7 +125,7 @@ public abstract class AbstractDataManager<A extends AbstractEntity, I extends Se
   }
   
   private void deleteEs(A entity) {
-      esRepository.delete(entity);
+      Optional.ofNullable(esRepository).map(esRepository->esRepository.delete(entity));
 }
 
   /**
@@ -158,7 +158,7 @@ public abstract class AbstractDataManager<A extends AbstractEntity, I extends Se
   }
   
   private Iterable<A> findAllByEs() {
-    return esRepository.findAll();
+    return Optional.ofNullable(esRepository).map(ElasticSearchRepository::findAll).orElse(null);
   }
 
   /**
