@@ -25,7 +25,6 @@ import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
@@ -45,7 +44,6 @@ import javax.annotation.PreDestroy;
  * @since 2018/11/19
  */
 @Slf4j
-@ConditionalOnProperty(name = "app.data.elasticsearch.enable", havingValue = "true")
 public abstract class AbstractElasticSearchRepository<T extends AbstractEntity, E extends Serializable>
                                                      implements ElasticSearchRepository<T, E>, InitializingBean {
 

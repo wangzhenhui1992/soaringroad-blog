@@ -12,6 +12,7 @@
 package com.soaringroad.blog.repository.es;
 
 import com.soaringroad.blog.entity.Setting;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 /**
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Component;
  * </pre>
  */
 @Component
+@ConditionalOnProperty(name = "app.data.elasticsearch.enable", havingValue = "true")
 public class SettingEsRepository extends AbstractElasticSearchRepository<Setting,Long>{
   /**
    * {@inheritDoc}
