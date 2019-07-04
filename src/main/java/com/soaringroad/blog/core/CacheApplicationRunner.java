@@ -13,6 +13,7 @@ package com.soaringroad.blog.core;
 
 import com.soaringroad.blog.common.CacheRepository;
 import com.soaringroad.blog.repository.rdb.ArticleRdbRepository;
+import com.soaringroad.blog.repository.rdb.SettingRdbRepository;
 import com.soaringroad.blog.util.SrBlogConsts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -28,6 +29,9 @@ import org.springframework.stereotype.Component;
 public class CacheApplicationRunner implements ApplicationRunner {
   @Autowired
   private ArticleRdbRepository articleRepository;
+  
+  @Autowired
+  private SettingRdbRepository settingRdbRepository;
 
   @Autowired
   private CacheRepository cacheRepository;
@@ -40,6 +44,10 @@ public class CacheApplicationRunner implements ApplicationRunner {
     articleRepository.findAll().forEach(article -> {
       cacheRepository.setValue(String.format(SrBlogConsts.REDIS_KEY_ARTICLE_VIEW_COUNT, article.getId()),
           article.getView());
+    });
+    settingRdbRepository.findByName(SrBlogConsts.REDIS_KEY_VIEW_COUNT).stream().findFirst().map(setting->{
+      cacheRepository.setValue(SrBlogConsts.REDIS_KEY_VIEW_COUNT, Long.valueOf(setting.getValue()));
+      return null;
     });
   }
 

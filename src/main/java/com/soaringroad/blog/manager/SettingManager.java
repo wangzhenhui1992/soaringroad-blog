@@ -13,7 +13,18 @@ package com.soaringroad.blog.manager;
 
 import com.soaringroad.blog.common.AbstractDataManager;
 import com.soaringroad.blog.entity.Setting;
+import com.soaringroad.blog.repository.rdb.SettingRdbRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
 
 @Component
-public class SettingManager extends AbstractDataManager<Setting, Long> {}
+public class SettingManager extends AbstractDataManager<Setting, Long> {
+  
+  public Setting getSettingByName(String name) {
+    SettingRdbRepository settingRepository = (SettingRdbRepository) this.rdbRepository;
+    List<Setting> settings = settingRepository.findByName(name);
+    return CollectionUtils.isEmpty(settings) ? null : settings.get(0);
+  }
+}

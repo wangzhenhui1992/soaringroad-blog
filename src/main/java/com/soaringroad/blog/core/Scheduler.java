@@ -12,8 +12,10 @@
 package com.soaringroad.blog.core;
 
 import com.soaringroad.blog.common.CacheRepository;
-import com.soaringroad.blog.common.DataManager;
 import com.soaringroad.blog.entity.Article;
+import com.soaringroad.blog.entity.Setting;
+import com.soaringroad.blog.manager.ArticleManager;
+import com.soaringroad.blog.manager.SettingManager;
 import com.soaringroad.blog.service.NotifyBaiduService;
 import com.soaringroad.blog.util.SrBlogConsts;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +38,10 @@ public class Scheduler {
     private CacheRepository cacheRepository;
 
     @Autowired
-    private DataManager<Article, Long> articleDataManager;
+    private ArticleManager articleDataManager;
+    
+    @Autowired
+    private SettingManager settingManager;
     
     @Autowired
     private NotifyBaiduService notifyBaiduService;
@@ -46,6 +51,8 @@ public class Scheduler {
     @Scheduled(fixedDelay = 3600000, initialDelay=60000)
     public void execute() {
         log.info("定时Task启动");
+        flushViewCount();
+        
         List<String> urls = new ArrayList<String>();
         urls.add(SrBlogConsts.HOME_URL); 
         urls.add(SrBlogConsts.INTRODUCTION_URL); 
@@ -66,6 +73,20 @@ public class Scheduler {
         }
         log.info("定时Task结束");
     }
+    
+    private void flushViewCount() {
+      Setting setting = settingManager.getSettingByName(SrBlogConsts.REDIS_KEY_VIEW_COUNT);
+      if (setting == null) {
+        setting = new Setting();
+        setting.setName(SrBlogConsts.REDIS_KEY_VIEW_COUNT);
+      }
+      Object obj = cacheRepository.getValue(SrBlogConsts.REDIS_KEY_VIEW_COUNT);
+      if (obj == null) {
+        return;
+      }
+      setting.setValue(obj.toString());
+      settingManager.save(setting);
+    }
 
     private void flushViewCount(Article article) {
         Object obj = cacheRepository
@@ -74,6 +95,6 @@ public class Scheduler {
             return;
         }
         article.setView(Long.valueOf(obj.toString()));
-//        articleDataManager.save(article);
+        articleDataManager.save(article);
     }
 }
