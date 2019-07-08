@@ -12,7 +12,7 @@
 [![buddy pipeline](https://app.buddy.works/wangzhenhui1992-1/soaringroad-blog/pipelines/pipeline/152378/badge.svg?token=b7331631676aff048d52e85732235017aefb152c7c1a6b0afd60fd08b7b2df46 "buddy pipeline")](https://app.buddy.works/wangzhenhui1992-1/soaringroad-blog/pipelines/pipeline/152378)
 [![License](https://img.shields.io/badge/license-BSD%203--Clause-green.svg)](https://github.com/wangzhenhui1992/soaringroad-blog/blob/master/LICENSE)
 
-soaringroad-blog是SpringBoot之上开发的Restful风格的博客系统后端，我的个人博客专用。AWS/AliYun CI/CD集成。
+soaringroad-blog是SpringBoot之上开发的Restful风格的博客系统后端，我的个人博客专用。
 
 部署在我的个人博客[https://www.soaringroad.com](https://www.soaringroad.com)。
 
